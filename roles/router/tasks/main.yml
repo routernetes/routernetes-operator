@@ -20,4 +20,4 @@
 - name: daemonset
   kubernetes.core.k8s:
     template: daemonset.yaml.j2
-  register: daemonset
+  register: daemonset_status

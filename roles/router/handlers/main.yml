@@ -7,4 +7,4 @@
     label_selectors:
       - "app=r9s"
     state: absent
-  when: daemonset.changed is False
+  when: not daemonset_status.changed
