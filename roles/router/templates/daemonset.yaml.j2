@@ -20,7 +20,7 @@ spec:
           image: quay.io/routernetes/routernetes:latest
           command: ["/bin/bash", "-c"]
           args:
-            - nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }}
+            - nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
               nmcli connection modify dummy-k3s-lo connection.zone r9s-internal;
               nmcli connection modify {{ interfaces.inside[0].name }} connection.zone r9s-internal;
               nmcli connection modify {{ interfaces.outside[0].name }} connection.zone r9s-external;
