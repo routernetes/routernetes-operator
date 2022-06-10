@@ -1,2 +1,10 @@
 ---
-# handlers file for Router
+- name: restart daemonset
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Pod
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    label_selectors:
+      - "app=r9s"
+    state: absent
+  when: daemonset.changed is False

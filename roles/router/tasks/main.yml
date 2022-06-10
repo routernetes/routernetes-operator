@@ -2,15 +2,22 @@
 - name: dnsmasq-config
   kubernetes.core.k8s:
     template: dnsmasq-config.yaml.j2
+  notify:
+    - restart daemonset
 - name: firewalld-config
   kubernetes.core.k8s:
     template: firewalld-config.yaml.j2
+  notify:
+    - restart daemonset
 - name: zincati-config
   kubernetes.core.k8s:
     template: zincati-config.yaml.j2
+  notify:
+    - restart daemonset
 - name: dhcp-pvc
   kubernetes.core.k8s:
     template: dhcp-pvc.yaml.j2
 - name: daemonset
   kubernetes.core.k8s:
     template: daemonset.yaml.j2
+  register: daemonset
