@@ -19,8 +19,7 @@ jobs:
 
       - name: Use podman
         run: |
-          which docker
-          which podman
+          sudo ln -sf /usr/bin/podman /usr/bin/docker
 
       - name: Log in to Quay.io
         uses: redhat-actions/podman-login@v1
