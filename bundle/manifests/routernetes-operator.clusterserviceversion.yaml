@@ -10,7 +10,55 @@ metadata:
           "metadata": {
             "name": "router-sample"
           },
-          "spec": null
+          "spec": {
+            "dhcp": {
+              "dnsServer": "10.0.0.1",
+              "domain": "network.lan",
+              "endIP": "10.0.0.150",
+              "gateway": "10.0.0.1",
+              "leaseTime": "12h",
+              "mask": "255.255.255.0",
+              "startIP": "10.0.0.50"
+            },
+            "dns": {
+              "upstreamServers": [
+                "8.8.8.8",
+                "8.8.4.4"
+              ]
+            },
+            "firewall": {
+              "outside": {
+                "services": [
+                  "ssh"
+                ]
+              }
+            },
+            "interfaces": {
+              "inside": [
+                {
+                  "ipv4": {
+                    "address": "10.0.0.1/24",
+                    "method": "manual"
+                  },
+                  "name": "enp0s20u1"
+                }
+              ],
+              "outside": [
+                {
+                  "ipv4": {
+                    "method": "auto"
+                  },
+                  "name": "eno1"
+                }
+              ]
+            },
+            "updates": {
+              "day": "Sun",
+              "enabled": true,
+              "time": "04:00",
+              "timezone": "UTC"
+            }
+          }
         }
       ]
     capabilities: Basic Install
