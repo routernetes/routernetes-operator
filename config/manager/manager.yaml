@@ -29,7 +29,7 @@ spec:
       containers:
       - args:
         - --leader-elect
-        - --leader-election-id=operator
+        - --leader-election-id=routernetes-operator
         image: controller:latest
         name: manager
         env:
