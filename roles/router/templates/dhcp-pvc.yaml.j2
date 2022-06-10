@@ -1,15 +1,11 @@
----
-- name: dhcp-pvc
-  kubernetes.core.k8s:
-    definition:
-      kind: PersistentVolumeClaim
-      apiVersion: v1
-      metadata:
-        name: "{{ ansible_operator_meta.name }}-dhcp-lease-pvc"
-        namespace: "{{ ansible_operator_meta.namespace }}"
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 50Mi
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ ansible_operator_meta.name }}-dhcp-lease-pvc"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi

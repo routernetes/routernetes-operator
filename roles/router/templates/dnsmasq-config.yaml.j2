@@ -1,20 +1,16 @@
----
-- name: dnsmasq-config
-  kubernetes.core.k8s:
-    definition:
-      kind: ConfigMap
-      apiVersion: v1
-      metadata:
-        name: "{{ ansible_operator_meta.name }}-dnsmasq-config"
-        namespace: "{{ ansible_operator_meta.namespace }}"
-      data:
-        dnsmasq.conf: |
-          bind-interfaces
-          interface=enp0s20u1
-          dhcp-range=10.0.0.50,10.0.0.150,255.255.255.0,12h
-          dhcp-option=option:router,10.0.0.1
-          dhcp-option=option:dns-server,10.0.0.1
-          dhcp-authoritative
-          domain=network.lan
-          server=8.8.8.8
-          server=8.8.4.4
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ ansible_operator_meta.name }}-dnsmasq-config"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+data:
+  dnsmasq.conf: |
+    bind-interfaces
+    interface=enp0s20u1
+    dhcp-range=10.0.0.50,10.0.0.150,255.255.255.0,12h
+    dhcp-option=option:router,10.0.0.1
+    dhcp-option=option:dns-server,10.0.0.1
+    dhcp-authoritative
+    domain=network.lan
+    server=8.8.8.8
+    server=8.8.4.4
