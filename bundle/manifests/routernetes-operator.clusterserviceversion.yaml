@@ -39,6 +39,7 @@ spec:
           resources:
           - secrets
           - pods
+          - persistentvolumeclaims
           - pods/exec
           - pods/log
           verbs:
