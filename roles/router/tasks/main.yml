@@ -1,6 +1,6 @@
 ---
-- include: dnsmasq-config.yml
-- include: firewalld-config.yml
-- include: zincati-config.yml
-- include: dhcp-pvc.yml
+- include: dnsmasq-config.yaml
+- include: firewalld-config.yaml
+- include: zincati-config.yaml
+- include: dhcp-pvc.yaml
 - include: daemonset.yaml
