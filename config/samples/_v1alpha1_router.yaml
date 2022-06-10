@@ -3,4 +3,34 @@ kind: Router
 metadata:
   name: router-sample
 spec:
-  # TODO(user): Add fields here
+  dhcp:
+    startIP: "10.0.0.50"
+    endIP: "10.0.0.150"
+    mask: "255.255.255.0"
+    leaseTime: 12h
+    gateway: "10.0.0.1"
+    dnsServer: "10.0.0.1"
+    domain: network.lan
+  dns:
+    upstreamServers:
+      - "8.8.8.8"
+      - "8.8.4.4"
+  firewall:
+    outside:
+      services:
+        - ssh
+  interfaces:
+    outside:
+      - name: eno1
+        ipv4:
+          method: auto
+    inside:
+      - name: enp0s20u1
+        ipv4:
+          method: manual
+          address: 10.0.0.1/24
+  updates:
+    enabled: true
+    timezone: UTC
+    day: Sun
+    time: "04:00"
