@@ -1,0 +1,22 @@
+---
+- name: firewalld-config
+  kubernetes.core.k8s:
+    definition:
+      kind: ConfigMap
+      apiVersion: v1
+      metadata:
+        name: "{{ ansible_operator_meta.name }}-firewalld-config"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+      data:
+        r9s-external.xml: |
+          <?xml version="1.0" encoding="utf-8"?>
+          <zone>
+            <service name="ssh"/>
+            <masquerade/>
+            <forward/>
+          </zone>
+        r9s-internal.xml: |
+          <?xml version="1.0" encoding="utf-8"?>
+          <zone target="ACCEPT">
+            <forward/>
+          </zone>

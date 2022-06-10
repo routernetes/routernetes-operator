@@ -1,2 +1,6 @@
 ---
-# tasks file for Router
+- include: dnsmasq-config.yml
+- include: firewalld-config.yml
+- include: zincati-config.yml
+- include: dhcp-pvc.yml
+- include: daemonset.yaml

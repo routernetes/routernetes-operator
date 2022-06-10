@@ -1,0 +1,19 @@
+---
+- name: zincati-config
+  kubernetes.core.k8s:
+    definition:
+      kind: ConfigMap
+      apiVersion: v1
+      metadata:
+        name: "{{ ansible_operator_meta.name }}-zincati-config"
+        namespace: "{{ ansible_operator_meta.namespace }}"
+      data:
+        55-updates-strategy.toml: |
+          [updates]
+          strategy = "periodic"
+          [updates.periodic]
+          time_zone = "America/Edmonton"
+          [[updates.periodic.window]]
+          days = [ "Sun" ]
+          start_time = "04:00"
+          length_minutes = 60
