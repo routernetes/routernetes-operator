@@ -13,4 +13,4 @@
     template: dhcp-pvc.yaml.j2
 - name: daemonset
   kubernetes.core.k8s:
-    template: daemonset.j2
+    template: daemonset.yaml.j2
