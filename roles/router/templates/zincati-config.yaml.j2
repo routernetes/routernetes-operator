@@ -6,7 +6,7 @@ metadata:
 data:
   55-updates-strategy.toml: |
     [updates]
-    enabled = {{ updates.enabled }}
+    enabled = {{ updates.enabled | lower }}
     strategy = "periodic"
     [updates.periodic]
     time_zone = "{{ updates.timezone }}"
