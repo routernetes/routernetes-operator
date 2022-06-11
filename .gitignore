@@ -5,6 +5,7 @@
 *.dll
 *.so
 *.dylib
+*.db
 bin
 
 # editor and IDE paraphernalia
