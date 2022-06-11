@@ -7,7 +7,7 @@ data:
   r9s-external.xml: |
     <?xml version="1.0" encoding="utf-8"?>
     <zone>
-{% for item in firewall.outside.services %}
+{% for item in firewall.outside.services | default ([]) %}
       <service name="{{ item }}"/>
 {% endfor %}
       <masquerade/>
