@@ -11,6 +11,9 @@ dns:
   upstreamServers:
     - "8.8.8.8"
     - "8.8.4.4"
+firewall:
+  outside:
+    services: []
 osUpdates:
   enabled: true
   timezone: UTC
