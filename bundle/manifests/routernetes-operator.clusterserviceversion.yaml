@@ -52,7 +52,7 @@ metadata:
                 }
               ]
             },
-            "updates": {
+            "osUpdates": {
               "day": "Sun",
               "enabled": true,
               "time": "04:00",

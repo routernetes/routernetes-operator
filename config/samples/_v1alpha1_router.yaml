@@ -29,7 +29,7 @@ spec:
         ipv4:
           method: manual
           address: 10.0.0.1/24
-  updates:
+  osUpdates:
     enabled: true
     timezone: UTC
     day: Sun

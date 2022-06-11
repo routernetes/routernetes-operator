@@ -6,11 +6,11 @@ metadata:
 data:
   55-updates-strategy.toml: |
     [updates]
-    enabled = {{ updates.enabled | lower }}
+    enabled = {{ os_updates.enabled | lower }}
     strategy = "periodic"
     [updates.periodic]
-    time_zone = "{{ updates.timezone }}"
+    time_zone = "{{ os_updates.timezone }}"
     [[updates.periodic.window]]
-    days = [ "{{ updates.day }}" ]
-    start_time = "{{ updates.time }}"
+    days = [ "{{ os_updates.day }}" ]
+    start_time = "{{ os_updates.time }}"
     length_minutes = 60

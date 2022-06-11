@@ -11,21 +11,7 @@ dns:
   upstreamServers:
     - "8.8.8.8"
     - "8.8.4.4"
-firewall:
-  outside:
-    services:
-      - ssh
-interfaces:
-  outside:
-    - name: eno1
-      ipv4:
-        method: auto
-  inside:
-    - name: enp0s20u1
-      ipv4:
-        method: manual
-        address: 10.0.0.1/24
-updates:
+osUpdates:
   enabled: true
   timezone: UTC
   day: Sun
