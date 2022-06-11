@@ -15,6 +15,7 @@ spec:
         app: r9s
     spec:
       hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       initContainers:
         - name: network-setup
           image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
