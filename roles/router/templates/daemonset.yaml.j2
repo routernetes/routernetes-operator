@@ -17,7 +17,7 @@ spec:
       hostNetwork: true
       initContainers:
         - name: network-setup
-          image: quay.io/routernetes/routernetes:latest
+          image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
           command: ["/bin/bash", "-c"]
           args:
             - nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
@@ -33,7 +33,7 @@ spec:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
         - name: zincati-setup
-          image: quay.io/routernetes/routernetes:latest
+          image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
           command: ["/bin/bash", "-c"]
           args:
             - cat /configs/55-updates-strategy.toml > /host-config.toml;
@@ -49,7 +49,7 @@ spec:
               mountPath: /host-config.toml
       containers:
         - name: tuned
-          image: quay.io/routernetes/routernetes:latest
+          image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
           command: ["tuned"]
           args: ["-p", "network-throughput"]
           securityContext:
@@ -58,7 +58,7 @@ spec:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
         - name: firewalld
-          image: quay.io/routernetes/routernetes:latest
+          image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
           command: ["firewalld"]
           args: ["--nofork", "--nopid"]
           securityContext:
@@ -73,7 +73,7 @@ spec:
               mountPath: /etc/firewalld/zones/r9s-internal.xml
               subPath: r9s-internal.xml
         - name: dnsmasq
-          image: quay.io/routernetes/routernetes:latest
+          image: quay.io/routernetes/routernetes:{{ routernetes_verison }}
           command: ["dnsmasq"]
           args: ["-k", "-l", "/leases/db"]
           securityContext:
