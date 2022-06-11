@@ -21,7 +21,8 @@ spec:
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash", "-c"]
           args:
-            - nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
+            - set -e;
+              nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
               nmcli connection modify cni0 connection.zone r9s-internal;
               nmcli connection modify dummy-k3s-lo connection.zone r9s-internal;
               nmcli connection modify {{ interfaces.inside[0].name }} connection.zone r9s-internal;
@@ -38,7 +39,8 @@ spec:
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash", "-c"]
           args:
-            - cat /configs/55-updates-strategy.toml > /host-config.toml;
+            - set -e;
+              cat /configs/55-updates-strategy.toml > /host-config.toml;
               gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit zincati.service replace;
           securityContext:
             privileged: true
