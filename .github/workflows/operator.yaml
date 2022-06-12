@@ -43,3 +43,7 @@ jobs:
       - name: Build operator bundle
         run: |
           make bundle bundle-build bundle-push
+
+      - name: Build operator catalog
+        run: |
+          make catalog-build catalog-push
