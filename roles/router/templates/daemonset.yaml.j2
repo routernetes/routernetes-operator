@@ -27,6 +27,7 @@ spec:
               nmcli connection modify dummy-k3s-lo connection.zone r9s-internal;
               nmcli connection modify {{ interfaces.inside[0].name }} connection.zone r9s-internal;
               nmcli connection modify {{ interfaces.outside[0].name }} connection.zone r9s-external;
+              nmcli connection up cni0;
               nmcli connection up dummy-k3s-lo;
               nmcli connection up {{ interfaces.inside[0].name }};
               nmcli connection up {{ interfaces.outside[0].name }};
