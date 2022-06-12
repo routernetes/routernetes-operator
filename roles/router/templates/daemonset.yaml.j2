@@ -22,13 +22,13 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - set -e;
-              nmcli connection modify {{ interfaces.inside[0].name }} ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
+              nmcli connection modify r9s-inside ipv4.addresses {{ interfaces.inside[0].ipv4.address }};
               nmcli connection modify dummy-k3s-lo connection.zone r9s-internal;
-              nmcli connection modify {{ interfaces.inside[0].name }} connection.zone r9s-internal;
-              nmcli connection modify {{ interfaces.outside[0].name }} connection.zone r9s-external;
+              nmcli connection modify r9s-inside connection.zone r9s-internal;
+              nmcli connection modify r9s-outside connection.zone r9s-external;
               nmcli connection up dummy-k3s-lo;
-              nmcli connection up {{ interfaces.inside[0].name }};
-              nmcli connection up {{ interfaces.outside[0].name }};
+              nmcli connection up r9s-inside;
+              nmcli connection up r9s-outside;
           securityContext:
             privileged: true
           volumeMounts:
