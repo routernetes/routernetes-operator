@@ -5,7 +5,6 @@
 *.dll
 *.so
 *.dylib
-*.db
 bin
 
 # editor and IDE paraphernalia
@@ -13,3 +12,8 @@ bin
 *.swp
 *.swo
 *~
+
+database/
+bundle/
+bunder.Dockerfile
+catalog.Dockerfile
