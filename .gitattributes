@@ -1,0 +1,2 @@
+*.yml.j2 linguist-language=YAML
+*.yaml.j2 linguist-language=YAML
