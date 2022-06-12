@@ -15,5 +15,5 @@ bin
 
 database/
 bundle/
-bunder.Dockerfile
+bundle.Dockerfile
 catalog.Dockerfile
