@@ -1,8 +1,8 @@
 ---
-- name: Create the routernetes.github.io/v1alpha1.Router
+- name: Create the routernetes.net/v1alpha1.Router
   k8s:
     state: present
-    namespace: '{{ namespace }}'
+    namespace: "{{ namespace }}"
     definition: "{{ lookup('template', '/'.join([samples_dir, cr_file])) | from_yaml }}"
     wait: yes
     wait_timeout: 300
@@ -10,7 +10,7 @@
       type: Successful
       status: "True"
   vars:
-    cr_file: '_v1alpha1_router.yaml'
+    cr_file: "_v1alpha1_router.yaml"
 
 - name: Add assertions here
   assert:

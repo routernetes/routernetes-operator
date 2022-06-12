@@ -5,7 +5,7 @@ metadata:
     alm-examples: |-
       [
         {
-          "apiVersion": "routernetes.github.io/v1alpha1",
+          "apiVersion": "routernetes.net/v1alpha1",
           "kind": "Router",
           "metadata": {
             "name": "router-sample"
@@ -71,7 +71,7 @@ spec:
   customresourcedefinitions:
     owned:
     - kind: Router
-      name: routers.routernetes.github.io
+      name: routers.routernetes.net
       version: v1alpha1
   description: Home Router Operator
   displayName: Routernetes
@@ -115,7 +115,7 @@ spec:
           - update
           - watch
         - apiGroups:
-          - routernetes.github.io
+          - routernetes.net
           resources:
           - routers
           - routers/status
@@ -264,5 +264,5 @@ spec:
   maturity: alpha
   provider:
     name: Routernetes
-    url: routernetes.github.io
+    url: routernetes.net
   version: 0.0.1

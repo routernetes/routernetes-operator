@@ -35,5 +35,5 @@ spec:
   maturity: alpha
   provider:
     name: Routernetes
-    url: routernetes.github.io
+    url: routernetes.net
   version: 0.0.0

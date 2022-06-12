@@ -28,7 +28,7 @@ BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 # This variable is used to construct full image tags for bundle and catalog images.
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
-# routernetes.github.io/routernetes-operator-bundle:$VERSION and routernetes.github.io/routernetes-operator-catalog:$VERSION.
+# routernetes.net/routernetes-operator-bundle:$VERSION and routernetes.net/routernetes-operator-catalog:$VERSION.
 IMAGE_TAG_BASE ?= quay.io/routernetes/routernetes-operator
 
 # BUNDLE_IMG defines the image:tag used for the bundle.

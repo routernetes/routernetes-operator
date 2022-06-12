@@ -40,10 +40,10 @@ rules:
       - update
       - watch
   ##
-  ## Rules for routernetes.github.io/v1alpha1, Kind: Router
+  ## Rules for routernetes.net/v1alpha1, Kind: Router
   ##
   - apiGroups:
-      - routernetes.github.io
+      - routernetes.net
     resources:
       - routers
       - routers/status

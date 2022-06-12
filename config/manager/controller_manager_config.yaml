@@ -7,4 +7,4 @@ metrics:
 
 leaderElection:
   leaderElect: true
-  resourceName: 811c9dc5.routernetes.github.io
+  resourceName: 811c9dc5.routernetes.net

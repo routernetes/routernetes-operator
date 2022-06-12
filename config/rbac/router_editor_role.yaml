@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: router-editor-role
 rules:
-- apiGroups:
-  - routernetes.github.io
-  resources:
-  - routers
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - routernetes.github.io
-  resources:
-  - routers/status
-  verbs:
-  - get
+  - apiGroups:
+      - routernetes.net
+    resources:
+      - routers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - routernetes.net
+    resources:
+      - routers/status
+    verbs:
+      - get
