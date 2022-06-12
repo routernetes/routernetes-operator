@@ -17,10 +17,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
 
-      - name: Use podman
-        run: |
-          sudo ln -sf /usr/bin/podman /usr/bin/docker
-
       - name: Log in to Quay.io
         uses: redhat-actions/podman-login@v1
         with:
@@ -38,7 +34,7 @@ jobs:
 
       - name: Build operator
         run: |
-          make docker-build docker-push
+          make podman-build podman-push
 
       - name: Build operator bundle
         run: |

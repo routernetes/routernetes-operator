@@ -1,5 +1,5 @@
 ```
-make docker-build docker-push
+make podman-build podman-push
 make bundle bundle-build bundle-push
 make bundle-build catalog-build
 

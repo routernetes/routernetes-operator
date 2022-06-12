@@ -24,7 +24,7 @@ BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
-# IMAGE_TAG_BASE defines the docker.io namespace and part of the image name for remote images.
+# IMAGE_TAG_BASE defines the quay.io namespace and part of the image name for remote images.
 # This variable is used to construct full image tags for bundle and catalog images.
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
@@ -50,7 +50,7 @@ endif
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
 
 .PHONY: all
-all: docker-build
+all: podman-build
 
 ##@ General
 
@@ -75,13 +75,13 @@ help: ## Display this help.
 run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kube/config
 	ANSIBLE_ROLES_PATH="$(ANSIBLE_ROLES_PATH):$(shell pwd)/roles" $(ANSIBLE_OPERATOR) run
 
-.PHONY: docker-build
-docker-build: ## Build docker image with the manager.
-	docker manifest rm operator; docker build --manifest operator --platform linux/amd64,linux/arm64 -t ${IMG} .
+.PHONY: podman-build
+podman-build: ## Build podman image with the manager.
+	podman manifest rm operator; podman build --manifest operator --platform linux/amd64,linux/arm64 -t ${IMG} .
 
-.PHONY: docker-push
-docker-push: ## Push docker image with the manager.
-	docker manifest push operator ${IMG}
+.PHONY: podman-push
+podman-push: ## Push podman image with the manager.
+	podman manifest push operator ${IMG}
 
 ##@ Deployment
 
@@ -146,11 +146,11 @@ bundle: kustomize ## Generate bundle manifests and metadata, then validate gener
 
 .PHONY: bundle-build
 bundle-build: ## Build the bundle image.
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	podman build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
 
 .PHONY: bundle-push
 bundle-push: ## Push the bundle image.
-	docker push $(BUNDLE_IMG)
+	podman push $(BUNDLE_IMG)
 
 .PHONY: opm
 OPM = ./bin/opm
@@ -185,10 +185,10 @@ endif
 # https://github.com/operator-framework/community-operators/blob/7f1438c/docs/packaging-operator.md#updating-your-existing-operator
 .PHONY: catalog-build
 catalog-build: opm ## Build a catalog image.
-	$(OPM) index add --container-tool docker --generate -d catalog.Dockerfile --mode semver --tag $(CATALOG_IMG) --bundles $(BUNDLE_IMGS) $(FROM_INDEX_OPT)
-	docker manifest rm catalog; docker build --manifest catalog --platform linux/amd64,linux/arm64 -f catalog.Dockerfile -t $(BUNDLE_IMG) .
+	$(OPM) index add --container-tool podman --generate -d catalog.Dockerfile --mode semver --tag $(CATALOG_IMG) --bundles $(BUNDLE_IMGS) $(FROM_INDEX_OPT)
+	podman manifest rm catalog; podman build --manifest catalog --platform linux/amd64,linux/arm64 -f catalog.Dockerfile -t $(BUNDLE_IMG) .
 
 # Push the catalog image.
 .PHONY: catalog-push
 catalog-push: ## Push a catalog image.
-	docker manifest push catalog $(CATALOG_IMG)
+	podman manifest push catalog $(CATALOG_IMG)
