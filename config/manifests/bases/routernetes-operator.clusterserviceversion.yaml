@@ -2,7 +2,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: '[]'
+    alm-examples: "[]"
     capabilities: Basic Install
   name: routernetes-operator.v0.0.0
   namespace: placeholder
@@ -12,26 +12,26 @@ spec:
   description: Home Router Operator
   displayName: Routernetes
   icon:
-  - base64data: ""
-    mediatype: ""
+    - base64data: ""
+      mediatype: ""
   install:
     spec:
       deployments: null
     strategy: ""
   installModes:
-  - supported: false
-    type: OwnNamespace
-  - supported: false
-    type: SingleNamespace
-  - supported: false
-    type: MultiNamespace
-  - supported: true
-    type: AllNamespaces
+    - supported: false
+      type: OwnNamespace
+    - supported: false
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: true
+      type: AllNamespaces
   keywords:
-  - router
+    - router
   links:
-  - name: Routernetes Operator
-    url: https://routernetes-operator.domain
+    - name: Routernetes Operator
+      url: https://routernetes-operator.domain
   maturity: alpha
   provider:
     name: Routernetes
