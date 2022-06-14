@@ -1,6 +1,8 @@
 name: Publish operator
 
 on:
+  release:
+    types: [published]
   push:
     branches:
       - main
@@ -11,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set release version
+        if: ${{ github.event_name == 'release' }}
+        run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Install qemu dependency
         run: |
