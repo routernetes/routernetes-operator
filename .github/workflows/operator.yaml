@@ -38,8 +38,22 @@ jobs:
 
       - name: Build operator bundle
         run: |
-          make bundle bundle-build bundle-push
+          make bundle bundle-build
+
+      - name: Validate bundle
+        run: |
+          operator-sdk bundle validate ./bundle --select-optional suite=operatorframework
+
+      - name: push bundle
+        run: |
+          make bundle-push
 
       - name: Build operator catalog
         run: |
-          make catalog-build catalog-push
+          make catalog-build
+
+      - name: Save bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle
+          path: bundle/
