@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ ansible_operator_meta.name }}-nm-config"
+  namespace: "{{ ansible_operator_meta.namespace }}"
+data:
+  nm-config.sh: |
+    set -e
+    nmcli connection delete r9s-inside
+    nmcli connection delete r9s-outside
+    nmcli connection add con-name r9s-inside type ethernet ifname {{ interfaces.inside[0].name }} ipv4.method manual ipv4.addresses {{ interfaces.inside[0].ipv4.address }} ipv6.method ignore connection.zone r9s-internal
+    nmcli connection add con-name r9s-outside type ethernet ifname {{ interfaces.outside[0].name }} ipv4.method auto ipv6.method ignore connection.zone r9s-external
+    nmcli connection up r9s-inside
+    nmcli connection up r9s-outside

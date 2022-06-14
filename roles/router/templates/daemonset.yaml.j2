@@ -20,19 +20,15 @@ spec:
         - name: network-setup
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash", "-c"]
-          args:
-            - set -e;
-              nmcli connection delete r9s-inside;
-              nmcli connection delete r9s-outside;
-              nmcli connection add con-name r9s-inside type ethernet ifname {{ interfaces.inside[0].name }} ipv4.method manual ipv4.addresses {{ interfaces.inside[0].ipv4.address }} ipv6.method ignore connection.zone r9s-internal;
-              nmcli connection add con-name r9s-outside type ethernet ifname {{ interfaces.outside[0].name }} ipv4.method auto ipv6.method ignore connection.zone r9s-external;
-              nmcli connection up r9s-inside;
-              nmcli connection up r9s-outside;
+          args: ["/nm-config.sh"]
           securityContext:
             privileged: true
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
+            - name: nm-config
+              mountPath: /nm-config.sh
+              subPath: nm-config.sh
         - name: zincati-setup
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash", "-c"]
@@ -117,3 +113,6 @@ spec:
         - name: zincati-config
           configMap:
             name: "{{ ansible_operator_meta.name }}-zincati-config"
+        - name: nm-config
+          configMap:
+            name: "{{ ansible_operator_meta.name }}-nm-config"
