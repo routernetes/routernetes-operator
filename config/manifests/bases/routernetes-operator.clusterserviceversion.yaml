@@ -6,6 +6,7 @@ metadata:
     capabilities: Full Lifecycle
     categories: Networking
     repository: https://github.com/routernetes/routernetes-operator
+    containerImage: quay.io/routernetes/routernetes-operator
   name: routernetes-operator.v0.0.0
   namespace: placeholder
 spec:
