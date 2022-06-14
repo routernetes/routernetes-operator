@@ -4,6 +4,8 @@ metadata:
   annotations:
     alm-examples: "[]"
     capabilities: Full Lifecycle
+    categories: Networking
+    repository: https://github.com/routernetes/routernetes-operator
   name: routernetes-operator.v0.0.0
   namespace: placeholder
 spec:
@@ -15,7 +17,9 @@ spec:
         kind: Router
         name: routers.routernetes.net
         version: v1alpha1
-  description: Routernetes uses the Kubernetes API to create a customizable and auto-updating home router
+  description:
+    Routernetes uses the Kubernetes API to create a customizable and auto-updating
+    home router
   displayName: Routernetes
   icon:
     - base64data: ""
@@ -38,6 +42,9 @@ spec:
   links:
     - name: Routernetes
       url: https://routernetes.net
+  maintainers:
+    - email: logan@bacoosta.com
+      name: Logan McNaughton
   maturity: alpha
   minKubeVersion: 1.21.0
   provider:
