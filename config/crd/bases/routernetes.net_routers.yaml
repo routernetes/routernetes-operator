@@ -33,13 +33,158 @@ spec:
               type: object
             spec:
               description: Spec defines the desired state of Router
+              properties:
+                osUpdates:
+                  description: Configuration for CoreOS auto-updates
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: Whether to enable auto-updated. Defaults to true
+                    timezone:
+                      type: string
+                      description: Timezone for auto-updates. Defaults to UTC
+                    day:
+                      type: string
+                      description: Day of the week to check for updates, either in full or abbreviated (first three letters) form. Defaults to Sun
+                    time:
+                      type: string
+                      description: Time to check for updates, in hh:mm ISO 8601 format. Defaults to 04:00
+                interfaces:
+                  description: Configuration for host interfaces
+                  type: object
+                  required:
+                    - outside
+                    - inside
+                  properties:
+                    outside:
+                      description: Outside (external) interfaces
+                      type: array
+                      items:
+                        type: object
+                        description: An outside interface
+                        required:
+                          - name
+                          - type
+                          - ipv4
+                        properties:
+                          name:
+                            description: Interface name
+                            type: string
+                          type:
+                            description: Interface type (for instance, ethernet)
+                            type: string
+                          members:
+                            type: array
+                            description: List of bridge members, only required when interface type is bridge
+                            items:
+                              type: string
+                          ipv4:
+                            description: IPv4 address settings
+                            type: object
+                            required:
+                              - method
+                            properties:
+                              method:
+                                description: auto or manual
+                                type: string
+                              address:
+                                description: Static address, for example 192.168.1.1/24. Only required when method is manual
+                                type: string
+                    inside:
+                      description: Inside (internal) interfaces
+                      type: array
+                      items:
+                        type: object
+                        description: An inside interface
+                        required:
+                          - name
+                          - type
+                          - ipv4
+                        properties:
+                          name:
+                            description: Interface name
+                            type: string
+                          type:
+                            description: Interface type (for instance, ethernet)
+                            type: string
+                          members:
+                            type: array
+                            description: List of bridge members, only required when interface type is bridge
+                            items:
+                              type: string
+                          ipv4:
+                            description: IPv4 address settings
+                            type: object
+                            required:
+                              - method
+                            properties:
+                              method:
+                                description: auto or manual
+                                type: string
+                              address:
+                                description: Static address, for example 192.168.1.1/24. Only required when method is manual
+                                type: string
+                firewall:
+                  description: Firewall zone settings
+                  type: object
+                  properties:
+                    outside:
+                      description: Outside (external) firewall rules
+                      type: object
+                      properties:
+                        services:
+                          description: List of permitted services
+                          type: array
+                          items:
+                            type: string
+                dns:
+                  description: Defines the configuration for the DNS server
+                  type: object
+                  properties:
+                    listenInterface:
+                      type: string
+                      description: Host interface that should be listening for DNS requests. Defaults to the first inside interface
+                    upstreamServers:
+                      type: array
+                      items:
+                        type: string
+                      description: List of upstream DNS servers. Defaults to 8.8.8.8 and 8.8.4.4
+                dhcp:
+                  description: Defines the configuration for the DHCP server
+                  type: object
+                  properties:
+                    startIP:
+                      type: string
+                      description: Start IP for the DHCP scope. Defaults to 192.168.64.50
+                    endIP:
+                      type: string
+                      description: End IP for the DHCP scope. Defaults to 192.168.64.150
+                    mask:
+                      type: string
+                      description: Subnet mask for the DHCP scope. Defaults to 255.255.255.0
+                    leaseTime:
+                      type: string
+                      description: DHCP lease time. Defaults to 12h
+                    gateway:
+                      type: string
+                      description: Gateway for the DHCP scope. Defaults to 192.168.64.1
+                    dnsServer:
+                      type: string
+                      description: DNS server for the DHCP scope. Defaults to 192.168.64.1
+                    domain:
+                      type: string
+                      description: Domain for the DHCP scope. Defaults to network.lan
               type: object
-              x-kubernetes-preserve-unknown-fields: true
+              required:
+                - interfaces
             status:
               description: Status defines the observed state of Router
               type: object
               x-kubernetes-preserve-unknown-fields: true
           type: object
+          required:
+            - spec
       served: true
       storage: true
       subresources:
