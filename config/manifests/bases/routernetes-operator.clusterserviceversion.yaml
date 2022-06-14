@@ -5,8 +5,8 @@ metadata:
     alm-examples: "[]"
     capabilities: Full Lifecycle
     categories: Networking
-    repository: https://github.com/routernetes/routernetes-operator
     containerImage: quay.io/routernetes/routernetes-operator
+    repository: https://github.com/routernetes/routernetes-operator
   name: routernetes-operator.v0.0.0
   namespace: placeholder
 spec:
