@@ -18,9 +18,12 @@ spec:
         kind: Router
         name: routers.routernetes.net
         version: v1alpha1
-  description:
-    Routernetes uses the Kubernetes API to create a customizable and auto-updating
-    home router
+  description: |
+    Routernetes uses the Kubernetes API to create a customizable and auto-updating home router
+    ## INSTALLATION
+    Please note that this operator is designed to be used on a specifically configured single-node Kubernetes cluster.
+
+    **Please visit https://routernetes.net for installation instructions**
   displayName: Routernetes
   icon:
     - base64data: ""
