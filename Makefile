@@ -142,6 +142,7 @@ bundle: kustomize ## Generate bundle manifests and metadata, then validate gener
 	operator-sdk generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build config/manifests | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+	sed -i 's/routernetes-operator:latest/routernetes-operator:$(VERSION)/g' ./bundle/manifests/routernetes-operator.clusterserviceversion.yaml
 	operator-sdk bundle validate ./bundle
 
 .PHONY: bundle-build
