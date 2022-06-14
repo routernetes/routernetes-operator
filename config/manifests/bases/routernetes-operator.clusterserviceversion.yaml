@@ -3,13 +3,19 @@ kind: ClusterServiceVersion
 metadata:
   annotations:
     alm-examples: "[]"
-    capabilities: Basic Install
+    capabilities: Full Lifecycle
   name: routernetes-operator.v0.0.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
-  customresourcedefinitions: {}
-  description: Home Router Operator
+  customresourcedefinitions:
+    owned:
+      - description: A Router defines the configuration for an all-in-one home router
+        displayName: Router
+        kind: Router
+        name: routers.routernetes.net
+        version: v1alpha1
+  description: Routernetes uses the Kubernetes API to create a customizable and auto-updating home router
   displayName: Routernetes
   icon:
     - base64data: ""
@@ -30,9 +36,10 @@ spec:
   keywords:
     - router
   links:
-    - name: Routernetes Operator
-      url: https://routernetes-operator.domain
+    - name: Routernetes
+      url: https://routernetes.net
   maturity: alpha
+  minKubeVersion: 1.21.0
   provider:
     name: Routernetes
     url: routernetes.net
