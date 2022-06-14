@@ -4,12 +4,12 @@ metadata:
   name: router-sample
 spec:
   dhcp:
-    startIP: "10.0.0.50"
-    endIP: "10.0.0.150"
+    startIP: "192.168.64.50"
+    endIP: "192.168.64.150"
     mask: "255.255.255.0"
     leaseTime: 12h
-    gateway: "10.0.0.1"
-    dnsServer: "10.0.0.1"
+    gateway: "192.168.64.1"
+    dnsServer: "192.168.64.1"
     domain: network.lan
   dns:
     upstreamServers:
@@ -28,7 +28,7 @@ spec:
       - name: enp0s20u1
         ipv4:
           method: manual
-          address: 10.0.0.1/24
+          address: 192.168.64.1/24
   osUpdates:
     enabled: true
     timezone: UTC
