@@ -43,6 +43,11 @@ spec:
       type: AllNamespaces
   keywords:
     - router
+    - home
+    - firewall
+    - raspberry
+    - pi
+    - rpi
   links:
     - name: Routernetes
       url: https://routernetes.net
