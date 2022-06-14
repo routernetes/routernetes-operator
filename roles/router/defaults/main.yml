@@ -14,7 +14,7 @@ dns:
 firewall:
   outside:
     services: []
-osUpdates:
+os_updates:
   enabled: true
   timezone: UTC
   day: Sun
