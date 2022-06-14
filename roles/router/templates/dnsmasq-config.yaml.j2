@@ -6,7 +6,7 @@ metadata:
 data:
   dnsmasq.conf: |
     bind-interfaces
-    interface={{ interfaces.inside[0].name }}
+    interface={{ dns.interface | default(interfaces.inside[0].name) }}
     dhcp-range={{ dhcp.start_ip }},{{ dhcp.end_ip }},{{ dhcp.mask }},{{ dhcp.lease_time }}
     dhcp-option=option:router,{{ dhcp.gateway }}
     dhcp-option=option:dns-server,{{ dhcp.dns_server }}

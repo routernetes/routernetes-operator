@@ -12,6 +12,7 @@ spec:
     dnsServer: "192.168.64.1"
     domain: network.lan
   dns:
+    interface: br0
     upstreamServers:
       - "8.8.8.8"
       - "8.8.4.4"
@@ -22,10 +23,14 @@ spec:
   interfaces:
     outside:
       - name: eno1
+        type: ethernet
         ipv4:
           method: auto
     inside:
-      - name: enp0s20u1
+      - name: br0
+        type: bridge
+        members:
+          - enp0s20u1
         ipv4:
           method: manual
           address: 192.168.64.1/24

@@ -6,9 +6,24 @@ metadata:
 data:
   nm-config.sh: |
     set -e
-    nmcli connection delete r9s-inside
-    nmcli connection delete r9s-outside
-    nmcli connection add con-name r9s-inside type ethernet ifname {{ interfaces.inside[0].name }} ipv4.method manual ipv4.addresses {{ interfaces.inside[0].ipv4.address }} ipv6.method ignore connection.zone r9s-internal
-    nmcli connection add con-name r9s-outside type ethernet ifname {{ interfaces.outside[0].name }} ipv4.method auto ipv6.method ignore connection.zone r9s-external
-    nmcli connection up r9s-inside
-    nmcli connection up r9s-outside
+    # Delete all existing connections except the loopback
+    nmcli -t -f name connection show | while read name;do \
+    if [[ $name != dummy* ]]; then \
+    nmcli connection delete \""$name"\"; \
+    fi; done
+
+    gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit NetworkManager.service
+{% for inside in interfaces.inside %}
+    nmcli connection add con-name inside-{{ inside.name }} type {{ inside.type }} ifname {{ inside.name }} ipv4.method manual ipv4.addresses {{ inside.ipv4.address }} ipv6.method ignore connection.zone r9s-internal
+{% for item in inside.members | default([]) %}
+    nmcli connection add type ethernet slave-type bridge ifname {{ item }} master {{ inside.name }}
+{% endfor %}
+    nmcli connection up inside-{{ inside.name }}
+{% endfor %}
+{% for outside in interfaces.outside %}
+    nmcli connection add con-name outside-{{ outside.name }} type {{ outside.type }} ifname {{ outside.name }} ipv4.method auto ipv6.method ignore connection.zone r9s-external
+{% for item in outside.members | default([]) %}
+    nmcli connection add type ethernet slave-type bridge ifname {{ item }} master {{ outside.name }}
+{% endfor %}
+    nmcli connection up outside-{{ outside.name }}
+{% endfor %}
