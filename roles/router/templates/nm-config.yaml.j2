@@ -18,7 +18,7 @@ data:
     nmcli connection add con-name r9s-inside-{{ inside.name }} type {{ inside.type }} ifname {{ inside.name }} \
       ipv4.method {{ inside.ipv4.method }} {% if inside.ipv4.address is defined %}ipv4.addresses {{ inside.ipv4.address }}{% endif %} ipv6.method ignore connection.zone r9s-internal
 {% for item in inside.members | default([]) %}
-    nmcli connection add type ethernet slave-type bridge ifname {{ item }} master {{ inside.name }}
+    nmcli connection add con-name r9s-inside-bridge-{{ item }} type ethernet slave-type bridge ifname {{ item }} master {{ inside.name }}
 {% endfor %}
     nmcli connection up r9s-inside-{{ inside.name }}
 {% endfor %}
@@ -27,7 +27,7 @@ data:
     nmcli connection add con-name r9s-outside-{{ outside.name }} type {{ outside.type }} ifname {{ outside.name }} \
       ipv4.method {{ outside.ipv4.method }} {% if outside.ipv4.address is defined %}ipv4.addresses {{ outside.ipv4.address }}{% endif %} ipv6.method ignore connection.zone r9s-external
 {% for item in outside.members | default([]) %}
-    nmcli connection add type ethernet slave-type bridge ifname {{ item }} master {{ outside.name }}
+    nmcli connection add con-name r9s-outside-bridge-{{ item }} type ethernet slave-type bridge ifname {{ item }} master {{ outside.name }}
 {% endfor %}
     nmcli connection up r9s-outside-{{ outside.name }}
 {% endfor %}
