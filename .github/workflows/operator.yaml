@@ -16,7 +16,7 @@ jobs:
 
       - name: Set release version
         if: ${{ github.event_name == 'release' }}
-        run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+        run: echo "VERSION=${${{ github.ref_name }}:1}" >> $GITHUB_ENV
 
       - name: Install qemu dependency
         run: |
