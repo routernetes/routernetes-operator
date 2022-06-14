@@ -9,7 +9,7 @@ data:
     # Delete all existing connections except the loopback
     nmcli -t -f name connection show | while read name;do \
     if [[ $name != dummy* ]]; then \
-      nmcli connection delete \""$name"\"; \
+      nmcli connection delete "$name"; \
     fi; done
 
     gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit NetworkManager.service
