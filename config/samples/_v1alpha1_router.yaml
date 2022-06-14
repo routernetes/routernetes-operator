@@ -12,7 +12,7 @@ spec:
     dnsServer: "192.168.64.1"
     domain: network.lan
   dns:
-    interface: br0
+    listenInterface: br0
     upstreamServers:
       - "8.8.8.8"
       - "8.8.4.4"
