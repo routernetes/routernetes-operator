@@ -19,7 +19,7 @@ spec:
       initContainers:
         - name: network-setup
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
-          command: ["/bin/bash", "-c"]
+          command: ["/bin/bash"]
           args: ["/nm-config.sh"]
           securityContext:
             privileged: true
@@ -116,3 +116,4 @@ spec:
         - name: nm-config
           configMap:
             name: "{{ ansible_operator_meta.name }}-nm-config"
+            defaultMode: 0777
