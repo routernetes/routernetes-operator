@@ -6,7 +6,7 @@ metadata:
 data:
   r9s-external.xml: |
     <?xml version="1.0" encoding="utf-8"?>
-    <zone>
+    <zone target="DROP">
 {% for item in firewall.outside.services %}
       <service name="{{ item }}"/>
 {% endfor %}
