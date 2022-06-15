@@ -6,6 +6,7 @@ metadata:
 data:
   nm-config.sh: |
     set -e
+    set -x
     # Delete all existing connections
     nmcli -t -f name connection show | while read name;do \
     if [[ $name == r9s* ]]; then \

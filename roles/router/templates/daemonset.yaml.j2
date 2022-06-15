@@ -32,6 +32,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - set -e;
+              set -x;
               cat /configs/55-updates-strategy.toml > /host-config.toml;
               gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit zincati.service replace;
           volumeMounts:
