@@ -21,8 +21,6 @@ spec:
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash"]
           args: ["/nm-config.sh"]
-          securityContext:
-            privileged: true
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
@@ -36,8 +34,6 @@ spec:
             - set -e;
               cat /configs/55-updates-strategy.toml > /host-config.toml;
               gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit zincati.service replace;
-          securityContext:
-            privileged: true
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
