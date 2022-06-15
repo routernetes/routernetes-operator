@@ -1,15 +1,28 @@
 ---
-- name: Get existing Routers
+- name: Get Routers in this namespace
+  kubernetes.core.k8s_info:
+    api_version: routernetes.net/v1alpha1
+    kind: Router
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    field_selectors:
+      - metadata.name!={{ ansible_operator_meta.name }}
+  register: this_namespace_routers
+
+- name: Get Routers in other namespaces
   kubernetes.core.k8s_info:
     api_version: routernetes.net/v1alpha1
     kind: Router
     field_selectors:
-      - metadata.name!={{ ansible_operator_meta.name }}
-  register: routers
+      - metadata.namespace!={{ ansible_operator_meta.namespace }}
+  register: other_namespace_routers
+
+- name: Combine lists
+  ansible.builtin.set_fact:
+    routers: "{{ this_namespace_routers.resources + other_namespace_routers.resources }}"
 
 - name: Get number of Routers
   ansible.builtin.set_fact:
-    router_number: "{{ routers.resources | length }}"
+    router_number: "{{ routers | length }}"
 
 - name: Fail if another Router exists
   ansible.builtin.fail:
