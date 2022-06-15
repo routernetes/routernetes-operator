@@ -4,7 +4,6 @@ resources:
   - bases/routernetes-operator.clusterserviceversion.yaml
   - ../default
   - ../samples
-  - ../scorecard
 
 patches:
   - target:
