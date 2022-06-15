@@ -1,27 +1,47 @@
 ---
+- name: Get existing Routers
+  kubernetes.core.k8s_info:
+    api_version: routernetes.net/v1alpha1
+    kind: Router
+  register: routers
+
+- name: Get number of Routers
+  ansible.builtin.set_fact:
+    router_number: "{{ routers.resources | length }}"
+
+- name: Fail if another Router exists
+  ansible.builtin.fail:
+    msg: The system may only have 1 Router at a time.
+  when: router_number|int > 0
+
 - name: dnsmasq-config
   kubernetes.core.k8s:
     template: dnsmasq-config.yaml.j2
   notify:
     - restart daemonset
+
 - name: firewalld-config
   kubernetes.core.k8s:
     template: firewalld-config.yaml.j2
   notify:
     - restart daemonset
+
 - name: zincati-config
   kubernetes.core.k8s:
     template: zincati-config.yaml.j2
   notify:
     - restart daemonset
+
 - name: nm-config
   kubernetes.core.k8s:
     template: nm-config.yaml.j2
   notify:
     - restart daemonset
+
 - name: dhcp-pvc
   kubernetes.core.k8s:
     template: dhcp-pvc.yaml.j2
+
 - name: daemonset
   kubernetes.core.k8s:
     template: daemonset.yaml.j2
