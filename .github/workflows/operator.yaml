@@ -24,7 +24,6 @@ jobs:
           tag=${{ github.ref_name }}
           echo "VERSION=${tag:1}" >> $GITHUB_ENV
           echo "CHANNELS=alpha" >> $GITHUB_ENV
-          echo "DEFAULT_CHANNEL=alpha" >> $GITHUB_ENV
 
       - name: Install qemu dependency
         run: |
