@@ -55,7 +55,7 @@ spec:
     - email: logan@bacoosta.com
       name: Logan McNaughton
   maturity: alpha
-  minKubeVersion: 1.21.0
+  minKubeVersion: 1.22.0
   provider:
     name: Routernetes
     url: routernetes.net
