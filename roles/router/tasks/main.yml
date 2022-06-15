@@ -3,6 +3,8 @@
   kubernetes.core.k8s_info:
     api_version: routernetes.net/v1alpha1
     kind: Router
+    field_selectors:
+      - metadata.name!={{ ansible_operator_meta.name }}
   register: routers
 
 - name: Get number of Routers
