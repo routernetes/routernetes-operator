@@ -67,6 +67,9 @@ spec:
             - name: firewalld-config
               mountPath: /etc/firewalld/zones/r9s-internal.xml
               subPath: r9s-internal.xml
+            - name: firewalld-config
+              mountPath: /etc/firewalld/firewalld.conf
+              subPath: firewalld.conf
         - name: dnsmasq
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["dnsmasq"]
