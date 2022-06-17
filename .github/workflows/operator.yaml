@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Ansible Lint
         run: |
-          ansible-lint ./roles/router
+          ansible-lint -vv ./roles/router
 
       - name: Log in to Quay.io
         uses: redhat-actions/podman-login@v1
