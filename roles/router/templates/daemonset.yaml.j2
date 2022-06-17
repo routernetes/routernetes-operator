@@ -73,7 +73,7 @@ spec:
         - name: dnsmasq
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["dnsmasq"]
-          args: ["-k", "-l", "/leases/db", "--log-facility=-"]
+          args: ["-k", "-h", "-R", "-l", "/leases/db", "--log-facility=-"]
           securityContext:
             capabilities:
               add: ["NET_ADMIN"]
