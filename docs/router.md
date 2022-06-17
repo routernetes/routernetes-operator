@@ -84,8 +84,8 @@ Spec defines the desired state of Router
         </tr>
     </thead>
     <tbody><tr>
-        <td><b><a href="#routerspecinterfaces">interfaces</a></b></td>
-        <td>object</td>
+        <td><b><a href="#routerspecinterfacesindex">interfaces</a></b></td>
+        <td>[]object</td>
         <td>
           Configuration for host interfaces<br/>
         </td>
@@ -122,12 +122,12 @@ Spec defines the desired state of Router
 </table>
 
 
-### Router.spec.interfaces
+### Router.spec.interfaces[index]
 <sup><sup>[↩ Parent](#routerspec)</sup></sup>
 
 
 
-Configuration for host interfaces
+
 
 <table>
     <thead>
@@ -139,41 +139,7 @@ Configuration for host interfaces
         </tr>
     </thead>
     <tbody><tr>
-        <td><b><a href="#routerspecinterfacesinsideindex">inside</a></b></td>
-        <td>[]object</td>
-        <td>
-          Inside (internal) interfaces<br/>
-        </td>
-        <td>true</td>
-      </tr><tr>
-        <td><b><a href="#routerspecinterfacesoutsideindex">outside</a></b></td>
-        <td>[]object</td>
-        <td>
-          Outside (external) interfaces<br/>
-        </td>
-        <td>true</td>
-      </tr></tbody>
-</table>
-
-
-### Router.spec.interfaces.inside[index]
-<sup><sup>[↩ Parent](#routerspecinterfaces)</sup></sup>
-
-
-
-An inside interface
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b><a href="#routerspecinterfacesinsideindexipv4">ipv4</a></b></td>
+        <td><b><a href="#routerspecinterfacesindexipv4">ipv4</a></b></td>
         <td>object</td>
         <td>
           IPv4 address settings<br/>
@@ -200,94 +166,19 @@ An inside interface
           List of bridge members, only required when interface type is bridge<br/>
         </td>
         <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### Router.spec.interfaces.inside[index].ipv4
-<sup><sup>[↩ Parent](#routerspecinterfacesinsideindex)</sup></sup>
-
-
-
-IPv4 address settings
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b>method</b></td>
-        <td>string</td>
-        <td>
-          auto or manual<br/>
-        </td>
-        <td>true</td>
       </tr><tr>
-        <td><b>address</b></td>
+        <td><b>zone</b></td>
         <td>string</td>
         <td>
-          Static address, for example 192.168.1.1/24. Only required when method is manual<br/>
+          Firewall zone. Defaults to inside<br/>
         </td>
         <td>false</td>
       </tr></tbody>
 </table>
 
 
-### Router.spec.interfaces.outside[index]
-<sup><sup>[↩ Parent](#routerspecinterfaces)</sup></sup>
-
-
-
-An outside interface
-
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Required</th>
-        </tr>
-    </thead>
-    <tbody><tr>
-        <td><b><a href="#routerspecinterfacesoutsideindexipv4">ipv4</a></b></td>
-        <td>object</td>
-        <td>
-          IPv4 address settings<br/>
-        </td>
-        <td>true</td>
-      </tr><tr>
-        <td><b>name</b></td>
-        <td>string</td>
-        <td>
-          Interface name<br/>
-        </td>
-        <td>true</td>
-      </tr><tr>
-        <td><b>type</b></td>
-        <td>string</td>
-        <td>
-          Interface type (for instance, ethernet)<br/>
-        </td>
-        <td>true</td>
-      </tr><tr>
-        <td><b>members</b></td>
-        <td>[]string</td>
-        <td>
-          List of bridge members, only required when interface type is bridge<br/>
-        </td>
-        <td>false</td>
-      </tr></tbody>
-</table>
-
-
-### Router.spec.interfaces.outside[index].ipv4
-<sup><sup>[↩ Parent](#routerspecinterfacesoutsideindex)</sup></sup>
+### Router.spec.interfaces[index].ipv4
+<sup><sup>[↩ Parent](#routerspecinterfacesindex)</sup></sup>
 
 
 
@@ -409,7 +300,7 @@ Defines the configuration for the DNS server
         <td><b>listenInterface</b></td>
         <td>string</td>
         <td>
-          Host interface that should be listening for DNS requests. Defaults to the first inside interface<br/>
+          Host interface that should be listening for DNS requests. Defaults to the first non-outside interface<br/>
         </td>
         <td>false</td>
       </tr><tr>

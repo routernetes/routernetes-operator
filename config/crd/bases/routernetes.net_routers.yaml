@@ -52,79 +52,40 @@ spec:
                       description: Time to check for updates, in hh:mm ISO 8601 format. Defaults to 04:00
                 interfaces:
                   description: Configuration for host interfaces
-                  type: object
-                  required:
-                    - outside
-                    - inside
-                  properties:
-                    outside:
-                      description: Outside (external) interfaces
-                      type: array
-                      items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - type
+                      - ipv4
+                    properties:
+                      name:
+                        description: Interface name
+                        type: string
+                      type:
+                        description: Interface type (for instance, ethernet)
+                        type: string
+                      zone:
+                        description: Firewall zone. Defaults to inside
+                        type: string
+                      members:
+                        type: array
+                        description: List of bridge members, only required when interface type is bridge
+                        items:
+                          type: string
+                      ipv4:
+                        description: IPv4 address settings
                         type: object
-                        description: An outside interface
                         required:
-                          - name
-                          - type
-                          - ipv4
+                          - method
                         properties:
-                          name:
-                            description: Interface name
+                          method:
+                            description: auto or manual
                             type: string
-                          type:
-                            description: Interface type (for instance, ethernet)
+                          address:
+                            description: Static address, for example 192.168.1.1/24. Only required when method is manual
                             type: string
-                          members:
-                            type: array
-                            description: List of bridge members, only required when interface type is bridge
-                            items:
-                              type: string
-                          ipv4:
-                            description: IPv4 address settings
-                            type: object
-                            required:
-                              - method
-                            properties:
-                              method:
-                                description: auto or manual
-                                type: string
-                              address:
-                                description: Static address, for example 192.168.1.1/24. Only required when method is manual
-                                type: string
-                    inside:
-                      description: Inside (internal) interfaces
-                      type: array
-                      items:
-                        type: object
-                        description: An inside interface
-                        required:
-                          - name
-                          - type
-                          - ipv4
-                        properties:
-                          name:
-                            description: Interface name
-                            type: string
-                          type:
-                            description: Interface type (for instance, ethernet)
-                            type: string
-                          members:
-                            type: array
-                            description: List of bridge members, only required when interface type is bridge
-                            items:
-                              type: string
-                          ipv4:
-                            description: IPv4 address settings
-                            type: object
-                            required:
-                              - method
-                            properties:
-                              method:
-                                description: auto or manual
-                                type: string
-                              address:
-                                description: Static address, for example 192.168.1.1/24. Only required when method is manual
-                                type: string
                 firewall:
                   description: Firewall zone settings
                   type: object
@@ -144,7 +105,7 @@ spec:
                   properties:
                     listenInterface:
                       type: string
-                      description: Host interface that should be listening for DNS requests. Defaults to the first inside interface
+                      description: Host interface that should be listening for DNS requests. Defaults to the first non-outside interface
                     upstreamServers:
                       type: array
                       items:

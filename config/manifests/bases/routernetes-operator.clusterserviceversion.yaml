@@ -2,7 +2,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
   annotations:
-    alm-examples: "[]"
+    alm-examples: '[]'
     capabilities: Full Lifecycle
     categories: Networking
     containerImage: quay.io/routernetes/routernetes-operator:latest
@@ -13,11 +13,11 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-      - description: A Router defines the configuration for an all-in-one home router
-        displayName: Router
-        kind: Router
-        name: routers.routernetes.net
-        version: v1alpha1
+    - description: A Router defines the configuration for an all-in-one home router
+      displayName: Router
+      kind: Router
+      name: routers.routernetes.net
+      version: v1alpha1
   description: |
     Routernetes uses the Kubernetes API to create a customizable and auto-updating home router
     ## INSTALLATION
@@ -26,34 +26,34 @@ spec:
     **Please visit [https://routernetes.net](https://routernetes.net) for installation instructions**
   displayName: Routernetes
   icon:
-    - base64data: ""
-      mediatype: ""
+  - base64data: ""
+    mediatype: ""
   install:
     spec:
       deployments: null
     strategy: ""
   installModes:
-    - supported: false
-      type: OwnNamespace
-    - supported: false
-      type: SingleNamespace
-    - supported: false
-      type: MultiNamespace
-    - supported: true
-      type: AllNamespaces
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
   keywords:
-    - router
-    - home
-    - firewall
-    - raspberry
-    - pi
-    - rpi
+  - router
+  - home
+  - firewall
+  - raspberry
+  - pi
+  - rpi
   links:
-    - name: Routernetes
-      url: https://routernetes.net
+  - name: Routernetes
+    url: https://routernetes.net
   maintainers:
-    - email: logan@bacoosta.com
-      name: Logan McNaughton
+  - email: logan@bacoosta.com
+    name: Logan McNaughton
   maturity: alpha
   minKubeVersion: 1.22.0
   provider:
