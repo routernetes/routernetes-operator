@@ -5,7 +5,7 @@ metadata:
   namespace: "{{ ansible_operator_meta.namespace }}"
 data:
   dnsmasq.conf: |
-    bind-interfaces
+    bind-dynamic
     interface={{ dns_listen_interface }}
     dhcp-range={{ dhcp.start_ip }},{{ dhcp.end_ip }},{{ dhcp.mask }},{{ dhcp.lease_time }}
     dhcp-option=option:router,{{ dhcp.gateway }}
