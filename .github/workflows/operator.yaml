@@ -31,6 +31,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install ansible-lint
+        run: |
+          pip install --upgrade ansible-lint
+
+      - name: Run Ansible Lint
+        run: |
+          ansible-lint ./roles/router
+
       - name: Log in to Quay.io
         uses: redhat-actions/podman-login@v1
         with:

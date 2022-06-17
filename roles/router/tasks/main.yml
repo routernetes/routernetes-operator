@@ -44,11 +44,11 @@
   kubernetes.core.k8s:
     template:
       path: dnsmasq-config.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
   notify:
     - restart daemonset
 
@@ -56,11 +56,11 @@
   kubernetes.core.k8s:
     template:
       path: firewalld-config.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
   notify:
     - restart daemonset
 
@@ -68,11 +68,11 @@
   kubernetes.core.k8s:
     template:
       path: zincati-config.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
   notify:
     - restart daemonset
 
@@ -80,11 +80,11 @@
   kubernetes.core.k8s:
     template:
       path: nm-config.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
   notify:
     - restart daemonset
 
@@ -92,19 +92,19 @@
   kubernetes.core.k8s:
     template:
       path: dhcp-pvc.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
 
 - name: daemonset
   kubernetes.core.k8s:
     template:
       path: daemonset.yaml.j2
-      trim_blocks: no
-    apply: yes
+      trim_blocks: false
+    apply: true
     server_side_apply:
       field_manager: ansible
-      force_conflicts: yes
+      force_conflicts: true
   register: daemonset_status
