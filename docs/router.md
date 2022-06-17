@@ -300,7 +300,7 @@ Defines the configuration for the DNS server
         <td><b>listenInterface</b></td>
         <td>string</td>
         <td>
-          Host interface that should be listening for DNS requests. Defaults to the first non-outside interface<br/>
+          Host interface that should be listening for DNS requests. Defaults to the first inside interface<br/>
         </td>
         <td>false</td>
       </tr><tr>

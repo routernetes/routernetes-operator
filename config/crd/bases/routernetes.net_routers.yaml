@@ -105,7 +105,7 @@ spec:
                   properties:
                     listenInterface:
                       type: string
-                      description: Host interface that should be listening for DNS requests. Defaults to the first non-outside interface
+                      description: Host interface that should be listening for DNS requests. Defaults to the first inside interface
                     upstreamServers:
                       type: array
                       items:
