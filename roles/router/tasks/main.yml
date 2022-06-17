@@ -29,11 +29,16 @@
     msg: The system may only have 1 Router at a time.
   when: router_number|int > 0
 
+- name: Copy configured DNS listen interface
+  ansible.builtin.set_fact:
+    dns_listen_interface: "{{ dns.listen_interface }}"
+  when: dns.listen_interface is defined
+
 - name: Set default DNS listen interface
   ansible.builtin.set_fact:
-    dns.listen_interface: "{{ item.name }}"
+    dns_listen_interface: "{{ item.name }}"
   with_items: "{{ interfaces }}"
-  when: dns.listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
+  when: dns_listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
 
 - name: dnsmasq-config
   kubernetes.core.k8s:
