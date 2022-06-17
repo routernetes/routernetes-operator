@@ -42,7 +42,9 @@
 
 - name: dnsmasq-config
   kubernetes.core.k8s:
-    template: dnsmasq-config.yaml.j2
+    template:
+      path: dnsmasq-config.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
@@ -52,7 +54,9 @@
 
 - name: firewalld-config
   kubernetes.core.k8s:
-    template: firewalld-config.yaml.j2
+    template:
+      path: firewalld-config.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
@@ -62,7 +66,9 @@
 
 - name: zincati-config
   kubernetes.core.k8s:
-    template: zincati-config.yaml.j2
+    template:
+      path: zincati-config.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
@@ -72,7 +78,9 @@
 
 - name: nm-config
   kubernetes.core.k8s:
-    template: nm-config.yaml.j2
+    template:
+      path: nm-config.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
@@ -82,7 +90,9 @@
 
 - name: dhcp-pvc
   kubernetes.core.k8s:
-    template: dhcp-pvc.yaml.j2
+    template:
+      path: dhcp-pvc.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
@@ -90,7 +100,9 @@
 
 - name: daemonset
   kubernetes.core.k8s:
-    template: daemonset.yaml.j2
+    template:
+      path: daemonset.yaml.j2
+      trim_blocks: no
     apply: yes
     server_side_apply:
       field_manager: ansible
