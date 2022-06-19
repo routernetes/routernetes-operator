@@ -108,6 +108,16 @@
       field_manager: ansible
       force_conflicts: true
 
+- name: cluster-role-binding
+  kubernetes.core.k8s:
+    template:
+      path: cluster-role-binding.yaml.j2
+      trim_blocks: false
+    apply: true
+    server_side_apply:
+      field_manager: ansible
+      force_conflicts: true
+
 - name: daemonset
   kubernetes.core.k8s:
     template:
