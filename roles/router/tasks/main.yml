@@ -98,6 +98,16 @@
       field_manager: ansible
       force_conflicts: true
 
+- name: service-account
+  kubernetes.core.k8s:
+    template:
+      path: service-account.yaml.j2
+      trim_blocks: false
+    apply: true
+    server_side_apply:
+      field_manager: ansible
+      force_conflicts: true
+
 - name: daemonset
   kubernetes.core.k8s:
     template:
