@@ -108,6 +108,17 @@
       field_manager: ansible
       force_conflicts: true
 
+- name: Check for OpenShift SCC
+  kubernetes.core.k8s_info:
+    api_version: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    name: system:openshift:scc:privileged
+  register: openshift_scc
+
+- name: Convert to length
+  ansible.builtin.set_fact:
+    scc_number: "{{ openshift_scc.resources | length }}"
+
 - name: cluster-role-binding
   kubernetes.core.k8s:
     template:
@@ -117,6 +128,7 @@
     server_side_apply:
       field_manager: ansible
       force_conflicts: true
+  when: scc_number|int > 0
 
 - name: daemonset
   kubernetes.core.k8s:

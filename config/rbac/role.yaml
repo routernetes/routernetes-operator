@@ -38,6 +38,13 @@ rules:
       - update
       - watch
   - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterroles
+    verbs:
+      - get
+      - list
+  - apiGroups:
       - apps
     resources:
       - deployments
