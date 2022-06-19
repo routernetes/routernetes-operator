@@ -40,6 +40,21 @@
   with_items: "{{ interfaces }}"
   when: dns_listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
 
+- name: Get node info
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Node
+  register: node_info
+
+- name: Set zincati default
+  ansible.builtin.set_fact:
+    has_zincati: false
+
+- name: Check for zincati
+  ansible.builtin.set_fact:
+    has_zincati: true
+  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS")
+
 - name: dnsmasq-config
   kubernetes.core.k8s:
     template:
@@ -75,6 +90,7 @@
       force_conflicts: true
   notify:
     - restart daemonset
+  when: has_zincati
 
 - name: nm-config
   kubernetes.core.k8s:

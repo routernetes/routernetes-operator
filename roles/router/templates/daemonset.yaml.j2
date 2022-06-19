@@ -28,6 +28,7 @@ spec:
             - name: nm-config
               mountPath: /nm-config.sh
               subPath: nm-config.sh
+{% if has_zincati %}
         - name: zincati-setup
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["/bin/bash", "-c"]
@@ -43,6 +44,7 @@ spec:
               mountPath: /configs
             - name: zincati-host
               mountPath: /host-config.toml
+{% endif %}
       containers:
         - name: tuned
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
@@ -101,19 +103,21 @@ spec:
           hostPath:
             path: /run/dbus/system_bus_socket
             type: Socket
+{% if has_zincati %}
         - name: zincati-host
           hostPath:
             path: /etc/zincati/config.d/55-updates-strategy.toml
             type: FileOrCreate
+        - name: zincati-config
+          configMap:
+            name: "{{ ansible_operator_meta.name }}-zincati-config"
+{% endif %}
         - name: dnsmasq-config
           configMap:
             name: "{{ ansible_operator_meta.name }}-dnsmasq-config"
         - name: firewalld-config
           configMap:
             name: "{{ ansible_operator_meta.name }}-firewalld-config"
-        - name: zincati-config
-          configMap:
-            name: "{{ ansible_operator_meta.name }}-zincati-config"
         - name: nm-config
           configMap:
             name: "{{ ansible_operator_meta.name }}-nm-config"
