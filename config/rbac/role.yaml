@@ -14,7 +14,6 @@ rules:
       - pods
       - persistentvolumeclaims
       - serviceaccounts
-      - clusterroles
       - pods/exec
       - pods/log
     verbs:
@@ -26,6 +25,10 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings
   - apiGroups:
       - apps
     resources:
