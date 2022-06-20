@@ -60,7 +60,7 @@ spec:
         - name: firewalld
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["firewalld"]
-          args: ["--nofork", "--nopid"]
+          args: ["--nofork", "--nopid", "--debug"]
           securityContext:
             privileged: true
           volumeMounts:
