@@ -46,6 +46,7 @@ spec:
               mountPath: /host-config.toml
 {% endif %}
       containers:
+{% if not is_openshift %}
         - name: tuned
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["tuned"]
@@ -55,6 +56,7 @@ spec:
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
+{% endif %}
         - name: firewalld
           image: quay.io/routernetes/routernetes:{{ routernetes_version }}
           command: ["firewalld"]

@@ -1,4 +1,20 @@
 ---
+- name: Check for OpenShift
+  kubernetes.core.k8s_info:
+    api_version: config.openshift.io/v1
+    kind: ClusterVersion
+    name: version
+  register: openshift_version
+
+- name: Set OpenShift default
+  ansible.builtin.set_fact:
+    is_openshift: false
+
+- name: Set OpenShift value
+  ansible.builtin.set_fact:
+    is_openshift: true
+  when: openshift_version.resources|length|int > 0
+
 - name: Get Routers in this namespace
   kubernetes.core.k8s_info:
     api_version: routernetes.net/v1alpha1
@@ -20,14 +36,10 @@
   ansible.builtin.set_fact:
     routers: "{{ this_namespace_routers.resources + other_namespace_routers.resources }}"
 
-- name: Get number of Routers
-  ansible.builtin.set_fact:
-    router_number: "{{ routers | length }}"
-
 - name: Fail if another Router exists
   ansible.builtin.fail:
     msg: The system may only have 1 Router at a time.
-  when: router_number|int > 0
+  when: routers|length|int > 0
 
 - name: Copy configured DNS listen interface
   ansible.builtin.set_fact:
@@ -53,7 +65,7 @@
 - name: Check for zincati
   ansible.builtin.set_fact:
     has_zincati: true
-  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS")
+  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
 
 - name: dnsmasq-config
   kubernetes.core.k8s:
@@ -124,17 +136,6 @@
       field_manager: ansible
       force_conflicts: true
 
-- name: Check for OpenShift SCC
-  kubernetes.core.k8s_info:
-    api_version: rbac.authorization.k8s.io/v1
-    kind: ClusterRole
-    name: system:openshift:scc:privileged
-  register: openshift_scc
-
-- name: Convert to length
-  ansible.builtin.set_fact:
-    scc_number: "{{ openshift_scc.resources | length }}"
-
 - name: cluster-role-binding
   kubernetes.core.k8s:
     template:
@@ -144,7 +145,7 @@
     server_side_apply:
       field_manager: ansible
       force_conflicts: true
-  when: scc_number|int > 0
+  when: is_openshift
 
 - name: daemonset
   kubernetes.core.k8s:

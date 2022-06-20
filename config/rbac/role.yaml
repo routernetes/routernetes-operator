@@ -53,9 +53,9 @@ rules:
       - update
       - watch
   - apiGroups:
-      - rbac.authorization.k8s.io
+      - config.openshift.io
     resources:
-      - clusterroles
+      - clusterversions
     verbs:
       - get
       - list
