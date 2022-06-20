@@ -81,7 +81,9 @@ spec:
           args: ["-k", "-h", "-R", "-l", "/leases/db", "--log-facility=-"]
           securityContext:
             capabilities:
-              add: ["NET_ADMIN"]
+              add:
+                - NET_ADMIN
+                - NET_RAW
           ports:
             - name: dns-port
               containerPort: 53
