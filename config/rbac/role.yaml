@@ -32,6 +32,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
   - apiGroups:
       - security.openshift.io
     resourceNames:
@@ -59,6 +60,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
   - apiGroups:
       - apps
     resources:
