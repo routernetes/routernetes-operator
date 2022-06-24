@@ -4,6 +4,9 @@ metadata:
   name: "{{ ansible_operator_meta.name }}-dhcp-lease-pvc"
   namespace: "{{ ansible_operator_meta.namespace }}"
 spec:
+{% if dhcp.storage_class is defined %}
+  storageClassName: "{{ dhcp.storage_class }}"
+{% endif %}
   accessModes:
     - ReadWriteOnce
   resources:

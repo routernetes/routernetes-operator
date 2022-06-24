@@ -34,6 +34,10 @@ spec:
             spec:
               description: Spec defines the desired state of Router
               properties:
+                nodeSelectorLabels:
+                  description: Label selector used to determine which node should run the DaemonSet. Should only select one node. If multiple labels are specified, they must all match
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
                 osUpdates:
                   description: Configuration for CoreOS auto-updates
                   type: object
@@ -115,6 +119,9 @@ spec:
                   description: Defines the configuration for the DHCP server
                   type: object
                   properties:
+                    storageClass:
+                      type: string
+                      description: StorageClass to be used for the PVC that stores DHCP lease information
                     startIP:
                       type: string
                       description: Start IP for the DHCP scope. Defaults to 192.168.64.50

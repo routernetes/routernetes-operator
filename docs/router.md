@@ -112,6 +112,13 @@ Spec defines the desired state of Router
         </td>
         <td>false</td>
       </tr><tr>
+        <td><b>nodeSelectorLabels</b></td>
+        <td>object</td>
+        <td>
+          Label selector used to determine which node should run the DaemonSet. Should only select one node. If multiple labels are specified, they must all match<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
         <td><b><a href="#routerspecosupdates">osUpdates</a></b></td>
         <td>object</td>
         <td>
@@ -274,6 +281,13 @@ Defines the configuration for the DHCP server
         <td>string</td>
         <td>
           Start IP for the DHCP scope. Defaults to 192.168.64.50<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>storageClass</b></td>
+        <td>string</td>
+        <td>
+          StorageClass to be used for the PVC that stores DHCP lease information<br/>
         </td>
         <td>false</td>
       </tr></tbody>
