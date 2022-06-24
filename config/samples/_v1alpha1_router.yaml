@@ -1,7 +1,7 @@
 apiVersion: routernetes.net/v1alpha1
 kind: Router
 metadata:
-  name: router-sample
+  name: my-router
   namespace: routernetes
 spec:
   dhcp:
@@ -13,7 +13,7 @@ spec:
     dnsServer: "192.168.64.1"
     domain: network.lan
   dns:
-    listenInterface: br0
+    listenInterface: enp0s20u1
     upstreamServers:
       - "8.8.8.8"
       - "8.8.4.4"
@@ -26,15 +26,13 @@ spec:
       zone: outside
       ipv4:
         method: auto
-    - name: br0
-      type: bridge
-      members:
-        - enp0s20u1
+    - name: enp0s20u1
+      type: ethernet
       ipv4:
         method: manual
         address: 192.168.64.1/24
   osUpdates:
     enabled: true
-    timezone: UTC
+    timezone: "America/New_York"
     day: Sun
     time: "04:00"
