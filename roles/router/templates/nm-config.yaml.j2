@@ -17,7 +17,7 @@ data:
 
 {% for interface in interfaces %}
     nmcli connection add con-name r9s-interface-{{ interface.name }} type {{ interface.type }} ifname {{ interface.name }} \
-      ipv4.method {{ interface.ipv4.method }} {% if interface.ipv4.address is defined %}ipv4.addresses {{ interface.ipv4.address }}{% endif %} ipv6.method ignore {% if interface.zone is defined and interface.zone == "outside" %} connection.zone r9s-external{% endif %}
+      ipv4.method {{ interface.ipv4.method }} {% if interface.ipv4.address is defined %}ipv4.addresses {{ interface.ipv4.address }}{% endif %} ipv6.method ignore {% if interface.zone is defined and interface.zone == "outside" %} connection.zone r9s-external{% endif +%}
 {% for item in interface.members | default([]) %}
     nmcli connection add con-name r9s-interface-bridge-{{ item }} type ethernet slave-type bridge ifname {{ item }} master {{ interface.name }}
 {% endfor %}

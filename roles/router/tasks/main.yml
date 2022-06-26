@@ -71,7 +71,6 @@
   kubernetes.core.k8s:
     template:
       path: dnsmasq-config.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -83,7 +82,6 @@
   kubernetes.core.k8s:
     template:
       path: firewalld-config.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -95,7 +93,6 @@
   kubernetes.core.k8s:
     template:
       path: zincati-config.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -108,7 +105,6 @@
   kubernetes.core.k8s:
     template:
       path: nm-config.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -120,7 +116,6 @@
   kubernetes.core.k8s:
     template:
       path: dhcp-pvc.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -130,7 +125,6 @@
   kubernetes.core.k8s:
     template:
       path: service-account.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -140,7 +134,6 @@
   kubernetes.core.k8s:
     template:
       path: cluster-role-binding.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
@@ -151,7 +144,6 @@
   kubernetes.core.k8s:
     template:
       path: daemonset.yaml.j2
-      trim_blocks: false
     apply: true
     server_side_apply:
       field_manager: ansible
