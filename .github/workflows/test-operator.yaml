@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_TAG_BASE: localhost:443/routernetes-operator
+  IMAGE_TAG_BASE: localhost/routernetes-operator
 
 jobs:
   test-operator:
@@ -61,7 +61,7 @@ jobs:
             -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
           sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
           [registries.insecure]
-          registries = ["localhost:443"]
+          registries = ["localhost"]
           EOF'
 
       - name: Build operator
