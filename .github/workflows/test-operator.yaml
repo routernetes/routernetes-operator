@@ -15,34 +15,31 @@ jobs:
 
       - name: Set up system
         run: |
-          sudo -i
-          apt-get update
-          apt-get -y install firewalld tuned network-manager
-          systemctl disable --now ufw
-          systemctl disable --now firewalld
-          systemctl disable --now tuned
-          systemctl disable --now systemd-networkd
-          rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
-          sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
-          systemctl restart NetworkManager
+          sudo apt-get update
+          sudo apt-get -y install firewalld tuned network-manager
+          sudo systemctl disable --now ufw
+          sudo systemctl disable --now firewalld
+          sudo systemctl disable --now tuned
+          sudo systemctl disable --now systemd-networkd
+          sudo rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
+          sudo sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
+          sudo systemctl restart NetworkManager
 
       - name: Install k3s
         run: |
-          sudo -i
-          nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
-          nmcli connection up dummy-k3s-lo
+          sudo nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
+          sudo nmcli connection up dummy-k3s-lo
           curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
           sleep 30
 
       - name: Install OLM
         run: |
-          sudo -i
           export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
           export OS=$(uname | awk '{print tolower($0)}')
           export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/latest/download
-          curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
-          chmod +x /usr/local/bin/operator-sdk
+          sudo -E curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
+          sudo chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          operator-sdk olm install
+          sudo -E operator-sdk olm install
           sleep 30
-          kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
+          sudo kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
