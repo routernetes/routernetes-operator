@@ -49,6 +49,10 @@ jobs:
           EOF'
           sudo mkdir -p /etc/rancher/k3s/
           sudo bash -c 'cat <<EOF >/etc/rancher/k3s/registries.yaml
+          mirrors:
+            localhost:
+              endpoint:
+                - "https://localhost"
           configs:
             "localhost":
               tls:
