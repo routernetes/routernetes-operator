@@ -47,6 +47,13 @@ jobs:
           [registries.insecure]
           registries = ["localhost"]
           EOF'
+          sudo mkdir -p /etc/rancher/k3s/
+          sudo bash -c 'cat <<EOF >/etc/rancher/k3s/registries.yaml
+          configs:
+            "localhost":
+              tls:
+                insecure_skip_verify: true
+          EOF'
 
       - name: Install Operator SDK
         run: |
