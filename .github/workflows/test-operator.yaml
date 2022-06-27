@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
   pull_request:
 
+env:
+  IMAGE_TAG_BASE: localhost:5000/routernetes-operator
+
 jobs:
   test-operator:
     runs-on: ubuntu-latest
@@ -44,9 +47,15 @@ jobs:
           sleep 30
           sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
 
-      - name: Set operator version
+      - name: Setup local registry
         run: |
-          echo "VERSION=0.0.0" >> $GITHUB_ENV
+          sudo mkdir -p /var/lib/registry
+          sudo podman run --privileged -d --name registry -p 5000:5000 -v /var/lib/registry:/var/lib/registry --restart=always registry:2
+          sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
+          [[registry]]
+          location="localhost:5000"
+          insecure=true
+          EOF'
 
       - name: Build operator
         run: |
@@ -59,4 +68,4 @@ jobs:
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk run bundle quay.io/routernetes/routernetes-operator-bundle:v0.0.0 -n operators
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.1 -n operators
