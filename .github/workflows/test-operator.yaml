@@ -49,11 +49,14 @@ jobs:
 
       - name: Setup local registry
         run: |
+          sudo mkdir -p /usr/local/share/ca-certificates/
           sudo mkdir -p /certs
           sudo openssl req \
             -newkey rsa:4096 -nodes -sha256 -keyout /certs/domain.key \
             -addext "subjectAltName = DNS:localhost" \
             -x509 -days 365 -out /certs/domain.crt -subj "/C=US/ST=Texas/L=Plano/O=Acme Inc. /OU=IT Department/CN=acme.com"
+          sudo cp /certs/domain.crt /usr/local/share/ca-certificates/
+          sudo update-ca-certificates
           sudo mkdir -p /var/lib/registry
           sudo podman run --privileged -d --name registry -p 443:443 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
             -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
