@@ -75,7 +75,7 @@ jobs:
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.1 -n operators --skip-tls --skip-tls-verify
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.1 -n operators --skip-tls-verify
 
       - name: Check operator bundle
         run: |
