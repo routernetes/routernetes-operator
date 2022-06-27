@@ -28,25 +28,6 @@ jobs:
           sudo sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
           sudo systemctl restart NetworkManager
 
-      - name: Install k3s
-        run: |
-          sudo nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
-          sudo nmcli connection up dummy-k3s-lo
-          curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
-          sleep 30
-
-      - name: Install OLM
-        run: |
-          export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
-          export OS=$(uname | awk '{print tolower($0)}')
-          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/latest/download
-          sudo -E curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
-          sudo chmod +x /usr/local/bin/operator-sdk
-          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk olm install
-          sleep 30
-          sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
-
       - name: Setup local registry
         run: |
           sudo mkdir -p /usr/local/share/ca-certificates/
@@ -78,6 +59,25 @@ jobs:
       - name: Build operator bundle
         run: |
           make bundle bundle-build bundle-push
+
+      - name: Install k3s
+        run: |
+          sudo nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
+          sudo nmcli connection up dummy-k3s-lo
+          curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
+          sleep 30
+
+      - name: Install OLM
+        run: |
+          export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+          export OS=$(uname | awk '{print tolower($0)}')
+          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/latest/download
+          sudo -E curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
+          sudo chmod +x /usr/local/bin/operator-sdk
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          sudo -E operator-sdk olm install
+          sleep 30
+          sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
 
       - name: Install operator bundle
         run: |
