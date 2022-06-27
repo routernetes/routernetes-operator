@@ -105,9 +105,53 @@ jobs:
           sleep 30
           sudo -E k3s kubectl wait --timeout=24h --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
 
+      - name: Create Router
+        run: |
+          sudo k3s kubectl create namespace routernetes
+          cat <<EOF >router.yaml
+          apiVersion: routernetes.net/v1alpha1
+          kind: Router
+          metadata:
+            name: my-router
+            namespace: routernetes
+          spec:
+            dhcp:
+              startIP: "192.168.64.50"
+              endIP: "192.168.64.150"
+              mask: "255.255.255.0"
+              leaseTime: 12h
+              gateway: "192.168.64.1"
+              dnsServer: "192.168.64.1"
+              domain: network.lan
+            dns:
+              listenInterface: veth1
+              upstreamServers:
+                - "8.8.8.8"
+                - "8.8.4.4"
+            firewall:
+              outside:
+                services: []
+            interfaces:
+              - name: eth0
+                type: ethernet
+                zone: outside
+                ipv4:
+                  method: auto
+              - name: veth1
+                type: dummy
+                ipv4:
+                  method: manual
+                  address: 192.168.64.1/24
+            osUpdates:
+              enabled: true
+              timezone: "America/New_York"
+              day: Sun
+              time: "04:00"
+          EOF
+          sudo k3s kubectl apply -f router.yaml
+
       - name: List containers
         run: |
-          ip a
-          nmcli con show
+          sleep 30
           sudo k3s kubectl get pods --all-namespaces \
             -o jsonpath='{range .items[*]}{"\n"}{.metadata.namespace}/{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort
