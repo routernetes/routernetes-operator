@@ -52,18 +52,17 @@ jobs:
           sudo mkdir -p /var/lib/registry
           sudo podman run --privileged -d --name registry -p 5000:5000 -v /var/lib/registry:/var/lib/registry --restart=always registry:2
           sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
-          [[registry]]
-          location="localhost:5000"
-          insecure=true
+          [registries.insecure]
+          registries = ["localhost:5000"]
           EOF'
 
       - name: Build operator
         run: |
-          make podman-build
+          make podman-build podman-push
 
       - name: Build operator bundle
         run: |
-          make bundle bundle-build
+          make bundle bundle-build bundle-push
 
       - name: Install operator bundle
         run: |
