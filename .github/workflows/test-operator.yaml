@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_TAG_BASE: localhost:5000/routernetes-operator
+  IMAGE_TAG_BASE: localhost:443/routernetes-operator
 
 jobs:
   test-operator:
@@ -49,11 +49,19 @@ jobs:
 
       - name: Setup local registry
         run: |
+          sudo mkdir -p /certs
+          sudo openssl req \
+            -newkey rsa:4096 -nodes -sha256 -keyout /certs/domain.key \
+            -addext "subjectAltName = DNS:myregistry.domain.com" \
+            -x509 -days 365 -out /certs/domain.crt
           sudo mkdir -p /var/lib/registry
-          sudo podman run --privileged -d --name registry -p 5000:5000 -v /var/lib/registry:/var/lib/registry --restart=always registry:2
+          sudo podman run --privileged -d --name registry -p 443:443 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
+            -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+            -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+            -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
           sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
           [registries.insecure]
-          registries = ["localhost:5000"]
+          registries = ["localhost:443"]
           EOF'
 
       - name: Build operator
@@ -67,7 +75,7 @@ jobs:
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.1 -n operators --use-http
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.1 -n operators --skip-tls --skip-tls-verify
 
       - name: Check operator bundle
         run: |
