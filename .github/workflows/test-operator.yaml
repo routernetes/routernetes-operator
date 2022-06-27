@@ -150,8 +150,9 @@ jobs:
           EOF
           sudo k3s kubectl apply -f router.yaml
 
-      - name: List containers
+      - name: Check Router
         run: |
           sleep 30
-          sudo k3s kubectl get pods --all-namespaces \
-            -o jsonpath='{range .items[*]}{"\n"}{.metadata.namespace}/{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort
+          sudo k3s kubectl wait --for=condition=Successful -n routernetes router my-router
+          sudo k3s kubectl wait --for=condition=ready pod -n routernetes --all
+          sudo k3s kubectl get pods -n routernetes
