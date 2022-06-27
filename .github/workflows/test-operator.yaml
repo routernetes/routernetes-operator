@@ -42,4 +42,4 @@ jobs:
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           sudo -E operator-sdk olm install
           sleep 30
-          sudo kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
+          sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
