@@ -104,3 +104,10 @@ jobs:
           export CSV=$(sudo k3s kubectl get -n operators sub/routernetes-operator-v0-0-0-sub -o jsonpath='{.status.installedCSV}')
           sleep 30
           sudo -E k3s kubectl wait --timeout=24h --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
+
+      - name: List containers
+        run: |
+          ip a
+          nmcli con show
+          sudo k3s kubectl get pods --all-namespaces \
+            -o jsonpath='{range .items[*]}{"\n"}{.metadata.namespace}/{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort
