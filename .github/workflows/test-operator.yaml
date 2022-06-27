@@ -55,6 +55,7 @@ jobs:
       - name: Build operator bundle
         run: |
           make bundle bundle-build
+
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
