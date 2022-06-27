@@ -91,19 +91,19 @@ jobs:
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           sudo -E operator-sdk olm install
           sleep 30
-          sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
+          sudo k3s kubectl wait --timeout=10m --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
 
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.0 -n operators --skip-tls-verify --timeout 1h
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.0 -n operators --skip-tls-verify --timeout 10m
 
       - name: Check operator bundle
         run: |
-          sudo k3s kubectl wait --timeout=24h --for=jsonpath='{.status.state}'=AtLatestKnown -n operators sub/routernetes-operator-v0-0-0-sub
+          sudo k3s kubectl wait --timeout=10m --for=jsonpath='{.status.state}'=AtLatestKnown -n operators sub/routernetes-operator-v0-0-0-sub
           export CSV=$(sudo k3s kubectl get -n operators sub/routernetes-operator-v0-0-0-sub -o jsonpath='{.status.installedCSV}')
           sleep 30
-          sudo -E k3s kubectl wait --timeout=24h --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
+          sudo -E k3s kubectl wait --timeout=10m --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
 
       - name: Create Router
         run: |
@@ -153,6 +153,6 @@ jobs:
       - name: Check Router
         run: |
           sleep 30
-          sudo k3s kubectl wait --for=condition=Successful -n routernetes router my-router
-          sudo k3s kubectl wait --for=condition=ready pod -n routernetes --all
+          sudo k3s kubectl wait --timeout=10m --for=condition=Successful -n routernetes router my-router
+          sudo k3s kubectl wait --timeout=10m --for=condition=ready pod -n routernetes --all
           sudo k3s kubectl get pods -n routernetes
