@@ -16,7 +16,7 @@ jobs:
       - name: Set up system
         run: |
           sudo apt-get update
-          sudo apt-get -y install firewalld tuned network-manager
+          sudo apt-get -y install firewalld tuned network-manager qemu-user-static
           sudo systemctl disable --now ufw
           sudo systemctl disable --now firewalld
           sudo systemctl disable --now tuned
