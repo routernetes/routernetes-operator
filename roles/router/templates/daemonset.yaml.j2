@@ -11,6 +11,8 @@ spec:
       app: r9s
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/network-setup: unconfined
       labels:
         app: r9s
     spec:

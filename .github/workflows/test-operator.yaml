@@ -1,0 +1,170 @@
+name: Test operator
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+
+env:
+  IMAGE_TAG_BASE: localhost/routernetes-operator
+  VERSION: 0.0.0
+
+jobs:
+  test-operator:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up system
+        run: |
+          loginctl enable-linger 1001
+          sudo apt-get update
+          sudo apt-get -y dist-upgrade
+          sudo apt-get -y install firewalld tuned network-manager qemu-user-static dbus-x11
+          sudo apt-get -y remove ufw
+          sudo systemctl disable --now firewalld
+          sudo systemctl mask firewalld
+          sudo systemctl disable --now tuned
+          sudo systemctl mask tuned
+          sudo systemctl disable --now systemd-networkd
+          sudo systemctl mask systemd-networkd
+          sudo systemctl disable --now systemd-networkd-wait-online
+          sudo rm -f /etc/netplan/*
+          sudo bash -c 'cat <<EOF >/etc/netplan/01-networkmanager.yaml
+          network:
+            version: 2
+            renderer: NetworkManager
+          EOF'
+          sudo rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
+          sudo sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
+          sudo systemctl restart NetworkManager
+          sudo netplan apply
+          sudo nmcli connection add con-name r9s-interface-eth0 type ethernet ifname eth0 ipv4.method auto ipv6.method ignore
+          sudo nmcli connection up r9s-interface-eth0
+
+      - name: Setup local registry
+        run: |
+          sudo mkdir -p /usr/local/share/ca-certificates/
+          sudo mkdir -p /certs
+          sudo openssl req \
+            -newkey rsa:4096 -nodes -sha256 -keyout /certs/domain.key \
+            -addext "subjectAltName = DNS:localhost" \
+            -x509 -days 365 -out /certs/domain.crt -subj "/C=US/ST=Texas/L=Plano/O=Acme Inc. /OU=IT Department/CN=acme.com"
+          sudo cp /certs/domain.crt /usr/local/share/ca-certificates/
+          sudo update-ca-certificates
+          sudo mkdir -p /var/lib/registry
+          sudo podman run --privileged -d --name registry -p 443:443 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
+            -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+            -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+            -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
+          sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
+          [registries.insecure]
+          registries = ["localhost"]
+          EOF'
+          sudo mkdir -p /etc/rancher/k3s/
+          sudo bash -c 'cat <<EOF >/etc/rancher/k3s/registries.yaml
+          mirrors:
+            localhost:
+              endpoint:
+                - "https://localhost"
+          configs:
+            "localhost":
+              tls:
+                insecure_skip_verify: true
+          EOF'
+
+      - name: Install Operator SDK
+        run: |
+          export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+          export OS=$(uname | awk '{print tolower($0)}')
+          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/latest/download
+          sudo -E curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
+          sudo chmod +x /usr/local/bin/operator-sdk
+
+      - name: Build operator
+        run: |
+          make podman-build podman-push
+
+      - name: Build operator bundle
+        run: |
+          make bundle bundle-build bundle-push
+
+      - name: Install k3s
+        run: |
+          sudo nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
+          sudo nmcli connection up dummy-k3s-lo
+          curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
+          sleep 30
+
+      - name: Install OLM
+        run: |
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          sudo -E operator-sdk olm install
+          sleep 30
+          sudo k3s kubectl wait --timeout=10m --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
+
+      - name: Install operator bundle
+        run: |
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.0 -n operators --skip-tls-verify --timeout 10m
+
+      - name: Check operator bundle
+        run: |
+          sudo k3s kubectl wait --timeout=10m --for=jsonpath='{.status.state}'=AtLatestKnown -n operators sub/routernetes-operator-v0-0-0-sub
+          export CSV=$(sudo k3s kubectl get -n operators sub/routernetes-operator-v0-0-0-sub -o jsonpath='{.status.installedCSV}')
+          sleep 30
+          sudo -E k3s kubectl wait --timeout=10m --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
+
+      - name: Create Router
+        run: |
+          sudo k3s kubectl create namespace routernetes
+          cat <<EOF >router.yaml
+          apiVersion: routernetes.net/v1alpha1
+          kind: Router
+          metadata:
+            name: my-router
+            namespace: routernetes
+          spec:
+            dhcp:
+              startIP: "192.168.64.50"
+              endIP: "192.168.64.150"
+              mask: "255.255.255.0"
+              leaseTime: 12h
+              gateway: "192.168.64.1"
+              dnsServer: "192.168.64.1"
+              domain: network.lan
+            dns:
+              listenInterface: veth1
+              upstreamServers:
+                - "8.8.8.8"
+                - "8.8.4.4"
+            firewall:
+              outside:
+                services: []
+            interfaces:
+              - name: eth0
+                type: ethernet
+                zone: outside
+                ipv4:
+                  method: auto
+              - name: veth1
+                type: dummy
+                ipv4:
+                  method: manual
+                  address: 192.168.64.1/24
+            osUpdates:
+              enabled: true
+              timezone: "America/New_York"
+              day: Sun
+              time: "04:00"
+          EOF
+          sudo k3s kubectl apply -f router.yaml
+
+      - name: Check Router
+        run: |
+          sleep 10
+          sudo k3s kubectl wait --timeout=10m --for=condition=Successful -n routernetes router my-router
+          sudo k3s kubectl wait --timeout=10m --for=condition=ready pod -n routernetes --all
+          sudo k3s kubectl get pods -n routernetes

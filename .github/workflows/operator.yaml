@@ -1,4 +1,4 @@
-name: Publish operator
+name: Build operator
 
 on:
   release:
