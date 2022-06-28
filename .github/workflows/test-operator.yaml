@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_TAG_BASE: localhost/routernetes-operator
+  VERSION: 0.0.0
 
 jobs:
   test-operator:
@@ -81,10 +82,6 @@ jobs:
           export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/latest/download
           sudo -E curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
           sudo chmod +x /usr/local/bin/operator-sdk
-
-      - name: Set version
-        run: |
-          echo "VERSION=0.0.0" >> $GITHUB_ENV
 
       - name: Build operator
         run: |
@@ -172,7 +169,7 @@ jobs:
 
           sudo k3s kubectl describe pod -n routernetes
           export POD_NAME=$(sudo k3s kubectl get pods --no-headers -o custom-columns=":metadata.name" -n routernetes)
-          sudo k3s kubectl logs -n routernetes ${POD_NAME} -c network_setup -p
+          sudo k3s kubectl logs -n routernetes ${POD_NAME} -c network-setup -p
 
           sudo k3s kubectl wait --timeout=10m --for=condition=ready pod -n routernetes --all
           sudo k3s kubectl get pods -n routernetes
