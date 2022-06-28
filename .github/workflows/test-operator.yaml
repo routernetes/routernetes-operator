@@ -164,12 +164,6 @@ jobs:
 
       - name: Check Router
         run: |
-          sleep 60
           sudo k3s kubectl wait --timeout=10m --for=condition=Successful -n routernetes router my-router
-
-          sudo k3s kubectl describe pod -n routernetes
-          export POD_NAME=$(sudo k3s kubectl get pods --no-headers -o custom-columns=":metadata.name" -n routernetes)
-          sudo k3s kubectl logs -n routernetes ${POD_NAME} -c network-setup -p
-
           sudo k3s kubectl wait --timeout=10m --for=condition=ready pod -n routernetes --all
           sudo k3s kubectl get pods -n routernetes
