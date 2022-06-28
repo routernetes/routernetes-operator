@@ -38,6 +38,8 @@ jobs:
           sudo sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
           sudo systemctl restart NetworkManager
           sudo netplan apply
+          sudo nmcli connection add con-name r9s-interface-eth0 type ethernet ifname eth0 ipv4.method auto ipv6.method ignore
+          sudo nmcli connection up r9s-interface-eth0
 
       - name: Setup local registry
         run: |
