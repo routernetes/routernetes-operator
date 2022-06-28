@@ -24,13 +24,8 @@ jobs:
           sudo apt-get -y dist-upgrade
           sudo apt-get -y install firewalld tuned network-manager qemu-user-static dbus-x11
           sudo apt-get -y remove ufw
-          sudo systemctl disable --now firewalld
-          sudo systemctl mask firewalld
-          sudo systemctl disable --now tuned
-          sudo systemctl mask tuned
-          sudo systemctl disable --now systemd-networkd
-          sudo systemctl mask systemd-networkd
-          sudo systemctl disable --now systemd-networkd-wait-online
+          sudo systemctl disable --now firewalld tuned systemd-networkd systemd-networkd-wait-online
+          sudo systemctl mask firewalld tuned systemd-networkd systemd-networkd-wait-online
           sudo rm -f /etc/netplan/*
           sudo bash -c 'cat <<EOF >/etc/netplan/01-networkmanager.yaml
           network:
