@@ -163,4 +163,8 @@ jobs:
           sleep 30
           sudo k3s kubectl wait --timeout=10m --for=condition=ready pod -n routernetes --all
           sudo k3s kubectl get pods -n routernetes
-          ping -c 5 -I 192.168.64.1 8.8.8.8
+          export POD_COUNT=$(sudo k3s kubectl get pods -n routernetes --no-headers --field-selector status.phase=Running | wc -l)
+          if [[ "$POD_COUNT" -ne 1 ]]; then
+            echo bad pod count "$POD_COUNT"
+            exit 1
+          fi
