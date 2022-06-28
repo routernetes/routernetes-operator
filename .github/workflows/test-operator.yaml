@@ -12,7 +12,7 @@ env:
 
 jobs:
   test-operator:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
@@ -20,13 +20,24 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install firewalld tuned network-manager qemu-user-static
-          sudo systemctl disable --now ufw
+          sudo apt-get -y remove ufw
           sudo systemctl disable --now firewalld
+          sudo systemctl mask firewalld
           sudo systemctl disable --now tuned
+          sudo systemctl mask tuned
           sudo systemctl disable --now systemd-networkd
+          sudo systemctl mask systemd-networkd
+          sudo systemctl disable --now systemd-networkd-wait-online
+          sudo rm -f /etc/netplan/*
+          sudo bash -c 'cat <<EOF >/etc/netplan/01-networkmanager.yaml
+          network:
+            version: 2
+            renderer: NetworkManager
+          EOF'
           sudo rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
           sudo sed -i "s/managed=.*/managed=true/g" /etc/NetworkManager/NetworkManager.conf
           sudo systemctl restart NetworkManager
+          sudo netplan apply
 
       - name: Setup local registry
         run: |
@@ -132,12 +143,11 @@ jobs:
               outside:
                 services: []
             interfaces:
-              - name: veth0
-                type: dummy
+              - name: eth0
+                type: ethernet
                 zone: outside
                 ipv4:
-                  method: manual
-                  address: 192.168.62.1/24
+                  method: auto
               - name: veth1
                 type: dummy
                 ipv4:
