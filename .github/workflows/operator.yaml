@@ -17,7 +17,7 @@ jobs:
   build-operator:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set release version
         if: ${{ github.event_name == 'release' }}
