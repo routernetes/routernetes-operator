@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Ansible Lint
         run: |
-          ansible-lint -vv ./roles/router
+          ansible-lint -s ./roles/router
 
       - name: Log in to Quay.io
         uses: redhat-actions/podman-login@v1
@@ -56,7 +56,7 @@ jobs:
         run: |
           export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
           export OS=$(uname | awk '{print tolower($0)}')
-          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.23.0
+          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.24.1
           curl -L -o /usr/local/bin/operator-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
           chmod +x /usr/local/bin/operator-sdk
 
@@ -81,10 +81,6 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           make bundle-push
-
-      - name: Build operator catalog
-        run: |
-          make catalog-build
 
       - name: Save bundle
         uses: actions/upload-artifact@v3

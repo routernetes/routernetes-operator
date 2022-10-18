@@ -67,7 +67,7 @@
     has_zincati: true
   when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
 
-- name: dnsmasq-config
+- name: Dnsmasq-config
   kubernetes.core.k8s:
     template:
       path: dnsmasq-config.yaml.j2
@@ -78,7 +78,7 @@
   notify:
     - restart daemonset
 
-- name: firewalld-config
+- name: Firewalld-config
   kubernetes.core.k8s:
     template:
       path: firewalld-config.yaml.j2
@@ -89,7 +89,7 @@
   notify:
     - restart daemonset
 
-- name: zincati-config
+- name: Zincati-config
   kubernetes.core.k8s:
     template:
       path: zincati-config.yaml.j2
@@ -101,7 +101,7 @@
     - restart daemonset
   when: has_zincati
 
-- name: nm-config
+- name: Nm-config
   kubernetes.core.k8s:
     template:
       path: nm-config.yaml.j2
@@ -112,7 +112,7 @@
   notify:
     - restart daemonset
 
-- name: dhcp-pvc
+- name: Dhcp-pvc
   kubernetes.core.k8s:
     template:
       path: dhcp-pvc.yaml.j2
@@ -121,7 +121,7 @@
       field_manager: ansible
       force_conflicts: true
 
-- name: service-account
+- name: Service-account
   kubernetes.core.k8s:
     template:
       path: service-account.yaml.j2
@@ -130,7 +130,7 @@
       field_manager: ansible
       force_conflicts: true
 
-- name: cluster-role-binding
+- name: Cluster-role-binding
   kubernetes.core.k8s:
     template:
       path: cluster-role-binding.yaml.j2
@@ -140,7 +140,7 @@
       force_conflicts: true
   when: is_openshift
 
-- name: daemonset
+- name: Daemonset
   kubernetes.core.k8s:
     template:
       path: daemonset.yaml.j2
