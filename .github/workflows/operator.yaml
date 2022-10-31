@@ -62,7 +62,7 @@ jobs:
 
       - name: Build operator
         run: |
-          make docker-buildx
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
 
       - name: Push operator
         if: ${{ github.event_name != 'pull_request' }}
