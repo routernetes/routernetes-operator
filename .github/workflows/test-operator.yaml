@@ -17,12 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Set up system
         run: |
           loginctl enable-linger 1001
@@ -75,6 +69,12 @@ jobs:
               tls:
                 insecure_skip_verify: true
           EOF'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Install Operator SDK
         run: |
