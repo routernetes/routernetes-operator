@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_TAG_BASE: localhost/routernetes-operator
+  IMAGE_TAG_BASE: localhost:5000/routernetes-operator
   VERSION: 0.0.0
 
 jobs:
@@ -17,12 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up system
         run: |
           loginctl enable-linger 1001
           sudo apt-get update
           sudo apt-get -y dist-upgrade
-          sudo apt-get -y install firewalld tuned network-manager qemu-user-static dbus-x11
+          sudo apt-get -y install firewalld tuned network-manager dbus-x11
           sudo apt-get -y remove ufw
           sudo systemctl disable --now firewalld tuned systemd-networkd systemd-networkd-wait-online
           sudo systemctl mask firewalld tuned systemd-networkd systemd-networkd-wait-online
@@ -38,37 +41,11 @@ jobs:
           sudo netplan apply
           sudo nmcli connection add con-name r9s-interface-eth0 type ethernet ifname eth0 ipv4.method auto ipv6.method ignore
           sudo nmcli connection up r9s-interface-eth0
+          sudo systemctl restart docker
 
       - name: Setup local registry
         run: |
-          sudo mkdir -p /usr/local/share/ca-certificates/
-          sudo mkdir -p /certs
-          sudo openssl req \
-            -newkey rsa:4096 -nodes -sha256 -keyout /certs/domain.key \
-            -addext "subjectAltName = DNS:localhost" \
-            -x509 -days 365 -out /certs/domain.crt -subj "/C=US/ST=Texas/L=Plano/O=Acme Inc. /OU=IT Department/CN=acme.com"
-          sudo cp /certs/domain.crt /usr/local/share/ca-certificates/
-          sudo update-ca-certificates
-          sudo mkdir -p /var/lib/registry
-          sudo podman run --privileged -d --name registry -p 443:443 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
-            -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
-            -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
-            -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
-          sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
-          [registries.insecure]
-          registries = ["localhost"]
-          EOF'
-          sudo mkdir -p /etc/rancher/k3s/
-          sudo bash -c 'cat <<EOF >/etc/rancher/k3s/registries.yaml
-          mirrors:
-            localhost:
-              endpoint:
-                - "https://localhost"
-          configs:
-            "localhost":
-              tls:
-                insecure_skip_verify: true
-          EOF'
+          docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
       - name: Install Operator SDK
         run: |
@@ -80,7 +57,7 @@ jobs:
 
       - name: Build operator
         run: |
-          make podman-build podman-push
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
 
       - name: Build operator bundle
         run: |
@@ -103,7 +80,7 @@ jobs:
       - name: Install operator bundle
         run: |
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.0 -n operators --skip-tls-verify --timeout 10m
+          sudo -E operator-sdk run bundle ${IMAGE_TAG_BASE}-bundle:v0.0.0 -n operators --use-http --timeout 10m
 
       - name: Check operator bundle
         run: |
