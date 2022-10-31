@@ -80,7 +80,7 @@ jobs:
 
       - name: Build operator
         run: |
-          make podman-build podman-push
+          make docker-buildx docker-push
 
       - name: Build operator bundle
         run: |
