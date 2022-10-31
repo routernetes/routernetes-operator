@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_TAG_BASE: localhost/routernetes-operator
+  IMAGE_TAG_BASE: localhost:5000/routernetes-operator
   VERSION: 0.0.0
 
 jobs:
@@ -46,17 +46,17 @@ jobs:
         run: |
           sudo mkdir -p /usr/local/share/ca-certificates/
           sudo mkdir -p /certs
-          sudo mkdir -p /etc/docker/certs.d/localhost:443
+          sudo mkdir -p /etc/docker/certs.d/localhost:5000
           sudo openssl req \
             -newkey rsa:4096 -nodes -sha256 -keyout /certs/domain.key \
             -addext "subjectAltName = DNS:localhost" \
             -x509 -days 365 -out /certs/domain.crt -subj "/C=US/ST=Texas/L=Plano/O=Acme Inc. /OU=IT Department/CN=acme.com"
           sudo cp /certs/domain.crt /usr/local/share/ca-certificates/
-          sudo cp /certs/domain.crt /etc/docker/certs.d/localhost:443/ca.crt
+          sudo cp /certs/domain.crt /etc/docker/certs.d/localhost:5000/ca.crt
           sudo update-ca-certificates
           sudo mkdir -p /var/lib/registry
-          sudo podman run --privileged -d --name registry -p 443:443 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
-            -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+          sudo podman run --privileged -d --name registry -p 5000:5000 -v /var/lib/registry:/var/lib/registry -v /certs:/certs \
+            -e REGISTRY_HTTP_ADDR=0.0.0.0:5000 \
             -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
             -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
           sudo mkdir -p /etc/rancher/k3s/
@@ -64,7 +64,7 @@ jobs:
           mirrors:
             localhost:
               endpoint:
-                - "https://localhost"
+                - "https://localhost:5000"
           configs:
             "localhost":
               tls:
