@@ -44,7 +44,6 @@ jobs:
           sudo netplan apply
           sudo nmcli connection add con-name r9s-interface-eth0 type ethernet ifname eth0 ipv4.method auto ipv6.method ignore
           sudo nmcli connection up r9s-interface-eth0
-          sudo systemctl restart docker
 
       - name: Setup local registry
         run: |
@@ -61,6 +60,10 @@ jobs:
             -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
             -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
             -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key --restart=always registry:2
+          sudo bash -c 'cat <<EOF >>/etc/containers/registries.conf
+          [registries.insecure]
+          registries = ["localhost"]
+          EOF'
           sudo mkdir -p /etc/rancher/k3s/
           sudo bash -c 'cat <<EOF >/etc/rancher/k3s/registries.yaml
           mirrors:
@@ -72,6 +75,7 @@ jobs:
               tls:
                 insecure_skip_verify: true
           EOF'
+          sudo systemctl restart docker
 
       - name: Install Operator SDK
         run: |
