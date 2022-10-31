@@ -36,7 +36,7 @@ jobs:
 
       - name: Install ansible-lint
         run: |
-          pip install --upgrade ansible-lint
+          pip install --upgrade ansible-core ansible-lint
 
       - name: Run Ansible Lint
         run: |
