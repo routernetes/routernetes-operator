@@ -61,13 +61,14 @@ jobs:
           chmod +x /usr/local/bin/operator-sdk
 
       - name: Build operator
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
+          make docker-build
 
       - name: Push operator
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          make docker-push
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
 
       - name: Build operator bundle
         run: |
