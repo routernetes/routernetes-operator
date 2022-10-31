@@ -37,6 +37,7 @@ jobs:
       - name: Install ansible-lint
         run: |
           pip install --upgrade ansible-core ansible-lint
+          ansible-galaxy collection install -U kubernetes.core operator_sdk.util cloud.common
 
       - name: Run Ansible Lint
         run: |
