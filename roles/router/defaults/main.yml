@@ -19,3 +19,4 @@ os_updates:
   timezone: UTC
   day: Sun
   time: "04:00"
+is_openshift: false

@@ -6,10 +6,6 @@
     name: version
   register: openshift_version
 
-- name: Set OpenShift default
-  ansible.builtin.set_fact:
-    is_openshift: false
-
 - name: Set OpenShift value
   ansible.builtin.set_fact:
     is_openshift: true
