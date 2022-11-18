@@ -54,10 +54,6 @@
     kind: Node
   register: node_info
 
-- name: Set zincati default
-  ansible.builtin.set_fact:
-    has_zincati: false
-
 - name: Check for zincati
   when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
   ansible.builtin.set_fact:

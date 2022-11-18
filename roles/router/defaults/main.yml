@@ -20,3 +20,4 @@ os_updates:
   day: Sun
   time: "04:00"
 is_openshift: false
+has_zincati: false
