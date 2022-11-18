@@ -7,9 +7,9 @@
   register: openshift_version
 
 - name: Set OpenShift value
+  when: openshift_version.resources|length|int > 0
   ansible.builtin.set_fact:
     is_openshift: true
-  when: openshift_version.resources|length|int > 0
 
 - name: Get Routers in this namespace
   kubernetes.core.k8s_info:
@@ -33,20 +33,20 @@
     routers: "{{ this_namespace_routers.resources + other_namespace_routers.resources }}"
 
 - name: Fail if another Router exists
+  when: routers|length|int > 0
   ansible.builtin.fail:
     msg: The system may only have 1 Router at a time.
-  when: routers|length|int > 0
 
 - name: Copy configured DNS listen interface
+  when: dns.listen_interface is defined
   ansible.builtin.set_fact:
     dns_listen_interface: "{{ dns.listen_interface }}"
-  when: dns.listen_interface is defined
 
 - name: Set default DNS listen interface
+  when: dns_listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
   ansible.builtin.set_fact:
     dns_listen_interface: "{{ item.name }}"
   with_items: "{{ interfaces }}"
-  when: dns_listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
 
 - name: Get node info
   kubernetes.core.k8s_info:
@@ -59,9 +59,9 @@
     has_zincati: false
 
 - name: Check for zincati
+  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
   ansible.builtin.set_fact:
     has_zincati: true
-  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
 
 - name: Dnsmasq-config
   kubernetes.core.k8s:
@@ -86,6 +86,7 @@
     - restart daemonset
 
 - name: Zincati-config
+  when: has_zincati
   kubernetes.core.k8s:
     template:
       path: zincati-config.yaml.j2
@@ -95,7 +96,6 @@
       force_conflicts: true
   notify:
     - restart daemonset
-  when: has_zincati
 
 - name: Nm-config
   kubernetes.core.k8s:
@@ -127,6 +127,7 @@
       force_conflicts: true
 
 - name: Cluster-role-binding
+  when: is_openshift
   kubernetes.core.k8s:
     template:
       path: cluster-role-binding.yaml.j2
@@ -134,7 +135,6 @@
     server_side_apply:
       field_manager: ansible
       force_conflicts: true
-  when: is_openshift
 
 - name: Daemonset
   kubernetes.core.k8s:

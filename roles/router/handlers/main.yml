@@ -1,5 +1,6 @@
 ---
 - name: Restart daemonset
+  when: not daemonset_status.changed
   kubernetes.core.k8s:
     api_version: v1
     kind: Pod
@@ -7,4 +8,3 @@
     label_selectors:
       - "app=r9s"
     state: absent
-  when: not daemonset_status.changed
