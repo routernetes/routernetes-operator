@@ -43,7 +43,9 @@
     dns_listen_interface: "{{ dns.listen_interface }}"
 
 - name: Set default DNS listen interface
-  when: dns_listen_interface is not defined and (item.zone is not defined or (item.zone is defined and item.zone == "inside"))
+  when:
+    - dns_listen_interface is not defined
+    - item.zone is not defined or (item.zone is defined and item.zone == "inside")
   ansible.builtin.set_fact:
     dns_listen_interface: "{{ item.name }}"
   with_items: "{{ interfaces }}"
@@ -55,7 +57,9 @@
   register: node_info
 
 - name: Check for zincati
-  when: node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS") and not is_openshift
+  when:
+    - node_info["resources"][0]["status"]["nodeInfo"]["osImage"].startswith("Fedora CoreOS")
+    - not is_openshift
   ansible.builtin.set_fact:
     has_zincati: true
 
