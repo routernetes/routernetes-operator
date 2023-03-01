@@ -24,7 +24,7 @@ jobs:
         run: |
           loginctl enable-linger 1001
           sudo apt-get update
-          sudo apt-get -y dist-upgrade
+          # sudo apt-get -y dist-upgrade
           sudo apt-get -y install firewalld tuned network-manager dbus-x11
           sudo apt-get -y remove ufw
           sudo systemctl disable --now firewalld tuned systemd-networkd systemd-networkd-wait-online
