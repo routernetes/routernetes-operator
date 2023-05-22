@@ -62,12 +62,12 @@ jobs:
       - name: Build operator
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          make docker-build USE_IMAGE_DIGESTS=true
+          make docker-build
 
       - name: Push operator
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          make docker-buildx PLATFORMS=linux/arm64,linux/amd64 USE_IMAGE_DIGESTS=true
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
 
       - name: Build operator bundle
         run: |
@@ -80,7 +80,7 @@ jobs:
       - name: push bundle
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          make bundle-push USE_IMAGE_DIGESTS=true
+          make bundle-push
 
       - name: Save bundle
         uses: actions/upload-artifact@v3

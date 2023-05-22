@@ -57,7 +57,7 @@ jobs:
 
       - name: Build operator
         run: |
-          make docker-buildx PLATFORMS=linux/arm64,linux/amd64 USE_IMAGE_DIGESTS=true
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
 
       - name: Build operator bundle
         run: |
