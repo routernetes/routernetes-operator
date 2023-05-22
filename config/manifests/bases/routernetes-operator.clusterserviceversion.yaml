@@ -59,7 +59,7 @@ spec:
   provider:
     name: Routernetes
     url: routernetes.net
-  version: 0.0.0
   relatedImages:
   - name: routernetes
     image: quay.io/routernetes/routernetes@sha256:dd5894c23377173fe9b1c0a1040d141d9c24bc708759b4c08b8b6c62706298fe
+  version: 0.0.0
