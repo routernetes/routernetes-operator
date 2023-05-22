@@ -5,7 +5,6 @@ metadata:
     alm-examples: '[]'
     capabilities: Full Lifecycle
     categories: Networking
-    containerImage: quay.io/routernetes/routernetes-operator:latest
     operators.openshift.io/infrastructure-features: '["disconnected"]'
     repository: https://github.com/routernetes/routernetes-operator
   name: routernetes-operator.v0.0.0
