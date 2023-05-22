@@ -57,11 +57,11 @@ jobs:
 
       - name: Build operator
         run: |
-          make docker-buildx PLATFORMS=linux/arm64,linux/amd64
+          make docker-buildx PLATFORMS=linux/arm64,linux/amd64 USE_IMAGE_DIGESTS=true
 
       - name: Build operator bundle
         run: |
-          make bundle bundle-build bundle-push
+          make bundle bundle-build bundle-push USE_IMAGE_DIGESTS=true
 
       - name: Install k3s
         run: |

@@ -6,6 +6,7 @@ metadata:
     capabilities: Full Lifecycle
     categories: Networking
     containerImage: quay.io/routernetes/routernetes-operator:latest
+    operators.openshift.io/infrastructure-features: '["disconnected"]'
     repository: https://github.com/routernetes/routernetes-operator
   name: routernetes-operator.v0.0.0
   namespace: placeholder
@@ -59,7 +60,4 @@ spec:
   provider:
     name: Routernetes
     url: routernetes.net
-  relatedImages:
-  - name: routernetes
-    image: quay.io/routernetes/routernetes@sha256:dd5894c23377173fe9b1c0a1040d141d9c24bc708759b4c08b8b6c62706298fe
   version: 0.0.0
