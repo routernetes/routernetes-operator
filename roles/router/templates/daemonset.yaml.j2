@@ -34,7 +34,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       initContainers:
         - name: network-setup
-          image: quay.io/routernetes/routernetes@{{ routernetes_version }}
+          image: "{{ lookup('env', 'RELATED_IMAGE_ROUTERNETES') }}"
           command: ["/bin/bash"]
           args: ["/nm-config.sh"]
           volumeMounts:
@@ -45,7 +45,7 @@ spec:
               subPath: nm-config.sh
 {% if has_zincati %}
         - name: zincati-setup
-          image: quay.io/routernetes/routernetes@{{ routernetes_version }}
+          image: "{{ lookup('env', 'RELATED_IMAGE_ROUTERNETES') }}"
           command: ["/bin/bash", "-c"]
           args:
             - set -e;
@@ -63,7 +63,7 @@ spec:
       containers:
 {% if not is_openshift %}
         - name: tuned
-          image: quay.io/routernetes/routernetes@{{ routernetes_version }}
+          image: "{{ lookup('env', 'RELATED_IMAGE_ROUTERNETES') }}"
           command: ["tuned"]
           args: ["-p", "network-throughput"]
           securityContext:
@@ -73,7 +73,7 @@ spec:
               name: dbus-socket
 {% endif %}
         - name: firewalld
-          image: quay.io/routernetes/routernetes@{{ routernetes_version }}
+          image: "{{ lookup('env', 'RELATED_IMAGE_ROUTERNETES') }}"
           command: ["firewalld"]
           args: ["--nofork", "--nopid", "--debug"]
           securityContext:
@@ -91,7 +91,7 @@ spec:
               mountPath: /etc/firewalld/firewalld.conf
               subPath: firewalld.conf
         - name: dnsmasq
-          image: quay.io/routernetes/routernetes@{{ routernetes_version }}
+          image: "{{ lookup('env', 'RELATED_IMAGE_ROUTERNETES') }}"
           command: ["dnsmasq"]
           args: ["-k", "-h", "-R", "-l", "/leases/db", "--log-facility=-"]
           securityContext:

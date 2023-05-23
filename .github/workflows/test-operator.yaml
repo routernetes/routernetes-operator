@@ -61,7 +61,7 @@ jobs:
 
       - name: Build operator bundle
         run: |
-          make bundle bundle-build bundle-push
+          make bundle bundle-build bundle-push USE_IMAGE_DIGESTS=true
 
       - name: Install k3s
         run: |
@@ -88,6 +88,7 @@ jobs:
           export CSV=$(sudo k3s kubectl get -n operators sub/routernetes-operator-v0-0-0-sub -o jsonpath='{.status.installedCSV}')
           sleep 30
           sudo -E k3s kubectl wait --timeout=10m --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/${CSV}
+          sudo -E k3s kubectl get -n operators csv/${CSV} -o yaml
 
       - name: Create Router
         run: |
