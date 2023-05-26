@@ -25,9 +25,7 @@ spec:
 
     **Please visit [https://routernetes.net](https://routernetes.net) for installation instructions**
   displayName: Routernetes
-  icon:
-  - base64data: ""
-    mediatype: ""
+  icon: []
   install:
     spec:
       deployments: null
