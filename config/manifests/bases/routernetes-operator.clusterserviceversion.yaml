@@ -48,7 +48,7 @@ spec:
   - rpi
   links:
   - name: Routernetes
-    url: https://routernetes.net
+    url: https://github.com/routernetes/routernetes/wiki
   maintainers:
   - email: logan@bacoosta.com
     name: Logan McNaughton
