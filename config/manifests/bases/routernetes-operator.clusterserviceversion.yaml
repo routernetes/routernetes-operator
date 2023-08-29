@@ -23,7 +23,7 @@ spec:
     ## INSTALLATION
     Please note that this operator is designed to be used on a specifically configured single-node Kubernetes cluster.
 
-    **Please visit [https://routernetes.net](https://routernetes.net) for installation instructions**
+    **Please visit [https://github.com/routernetes/routernetes/wiki](https://github.com/routernetes/routernetes/wiki) for installation instructions**
   displayName: Routernetes
   icon: []
   install:
