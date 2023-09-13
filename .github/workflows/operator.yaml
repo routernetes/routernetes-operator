@@ -31,7 +31,7 @@ jobs:
           echo "DEFAULT_CHANNEL=alpha" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - uses: actions/setup-python@v4
         with:
